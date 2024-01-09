@@ -1,9 +1,0 @@
-# .coveragerc to control coverage.py
-[run]
-omit =
-    */site-packages/*
-    */dist-packages/*
-    */distutils/*
-    tests/*
-
-include = seg_metrics/*
