@@ -99,7 +99,6 @@ def dicom_read_max_min(dicom_path):
             ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
             #获取dicom文件的instance number
             instance_number = ds.InstanceNumber
-            # 将像素值的范围调整到 [0, 255]
             pixel_array = ds.pixel_array
             max_list.append(np.max(pixel_array))
             min_list.append(np.min(pixel_array))
