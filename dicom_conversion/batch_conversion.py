@@ -32,20 +32,3 @@ def batch_conversion(input_folder, output_folder, output_format):
 if __name__ == '__main__':
     print('Let\'s start!')
     batch_conversion(r'E:\data patient\2022032401', r'E:\data patient\2022032401_copy', 'png')
-    # dicom_path = r'E:\data patient\2022032401\1'
-    # files = os.listdir(dicom_path)
-    # instance = []
-    # for file in files:
-    #     if file.endswith(".DCM"):
-    #         dicom_file = os.path.join(dicom_path, file)
-    #         print(dicom_file)
-    #         # 读取 DICOM 文件
-    #         ds = pydicom.dcmread(dicom_file, force=True)
-    #         ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
-    #         #获取dicom文件的instance number
-    #         instance_number = ds.InstanceNumber
-    #         instance = np.append(instance_number,instance)
-    #         #顺序排列
-    #         instance = np.sort(instance)
-
-    # print(instance, len(instance))
