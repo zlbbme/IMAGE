@@ -5,13 +5,14 @@ import numpy as np
 import pydicom
 import matplotlib.pyplot as plt
 
-def convert_dicom_to_png(dicom_folder, output_folder,min_CT_num, max_CT_num):
+def convert_dicom_to_png(dicom_folder, output_folder):
     #判断输出文件夹是否存在，不存在则创建
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
+    min_CT_num,max_CT_num,slice_num  = dicom_read_max_min(dicom_folder)
     #遍历dicom文件夹下的所有文件，如果是dicom文件则转换为png文件
     for root, dirs, files in os.walk(dicom_folder):
-        slice_num = len(files)
+         
         for file in files:
             if file.endswith(".DCM"):
                 dicom_path = os.path.join(root, file)
@@ -42,9 +43,10 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
     #判断输出文件夹是否存在，不存在则创建
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
+    _,_,slice_num  = dicom_read_max_min(dicom_folder)
     #遍历dicom文件夹下的所有文件，如果是dicom文件则转换为png文件
     for root, dirs, files in os.walk(dicom_folder):
-        slice_num = len(files)
+
         for file in files:
             if file.endswith(".DCM"):
                 dicom_path = os.path.join(root, file)
@@ -84,11 +86,12 @@ def convert_dicom_to_nii(input_folder, output_nii):
     sitk.WriteImage(dicom_series, output_nii)
 
 def dicom_read_max_min(dicom_path):
-    max_list = []; min_list = []
+    max_list = []; min_list = [] ;len_dicom = 0
     #遍历文件夹下的所有文件，获取后缀为.DCM的文件
     for root, dirs, files in os.walk(dicom_path):
         for file in files:
             if file.endswith(".DCM"):
+                len_dicom += 1
                 dicom_path = os.path.join(root, file)
                 print(dicom_path)
             # 读取 DICOM 文件
@@ -102,7 +105,7 @@ def dicom_read_max_min(dicom_path):
             min_list.append(np.min(pixel_array))
     max_CT_num = np.max(max_list)
     min_CT_num = np.min(min_list)
-    return min_CT_num, max_CT_num
+    return min_CT_num, max_CT_num, len_dicom
 
 if __name__ == "__main__":
     # Usage example
