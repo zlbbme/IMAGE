@@ -31,4 +31,4 @@ def batch_conversion(input_folder, output_folder, output_format):
 
 if __name__ == '__main__':
     print('Let\'s start!')
-    batch_conversion(r'E:\data patient\2022032401', r'E:\data patient\2022032401_copy', 'png')
+    #batch_conversion(r'E:\data patient\2022032401', r'E:\data patient\2022032401_npy', 'npy')

@@ -87,21 +87,35 @@ def convert_dicom_to_nii(input_folder, output_nii):
 
 def dicom_read_max_min(dicom_path):
     max_list = []; min_list = [] ;len_dicom = 0
+    #如果dicom_path是文件
+    if os.path.isfile(dicom_path):
+        # 读取 DICOM 文件
+        ds = pydicom.dcmread(dicom_path, force=True)
+        ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
+        #获取dicom文件的instance number
+        instance_number = ds.InstanceNumber
+        pixel_array = ds.pixel_array
+        max_list.append(np.max(pixel_array))
+        min_list.append(np.min(pixel_array))
+        len_dicom = 1
+
+    if os.path.isdir(dicom_path):
     #遍历文件夹下的所有文件，获取后缀为.DCM的文件
-    for root, dirs, files in os.walk(dicom_path):
-        for file in files:
-            if file.endswith(".DCM"):
-                len_dicom += 1
-                dicom_path = os.path.join(root, file)
-                print(dicom_path)
-            # 读取 DICOM 文件
-            ds = pydicom.dcmread(dicom_path, force=True)
-            ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
-            #获取dicom文件的instance number
-            instance_number = ds.InstanceNumber
-            pixel_array = ds.pixel_array
-            max_list.append(np.max(pixel_array))
-            min_list.append(np.min(pixel_array))
+        for root, dirs, files in os.walk(dicom_path):
+            for file in files:
+                if file.endswith(".DCM"):
+                    len_dicom += 1
+                    dicom_path = os.path.join(root, file)
+                    print(dicom_path)
+                # 读取 DICOM 文件
+                ds = pydicom.dcmread(dicom_path, force=True)
+                ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
+                #获取dicom文件的instance number
+                instance_number = ds.InstanceNumber
+                pixel_array = ds.pixel_array
+                max_list.append(np.max(pixel_array))
+                min_list.append(np.min(pixel_array))
+                
     max_CT_num = np.max(max_list)
     min_CT_num = np.min(min_list)
     return min_CT_num, max_CT_num, len_dicom
