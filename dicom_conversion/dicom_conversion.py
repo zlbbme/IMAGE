@@ -57,7 +57,7 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian  #‘FileMetaDataset’ object has no attribute ‘TransferSyntaxUID’ 错误
             instance_number = ds.InstanceNumber
             #将数据格式转换为numpy
-            pixel_array = ds.pixel_array.astype(np.float32)
+            pixel_array = ds.pixel_array.astype(np.int16)
             #保存为npy文件
             np_filename = str(slice_num-instance_number) + '.npy'
             np_filepath = os.path.join(output_folder, np_filename)
