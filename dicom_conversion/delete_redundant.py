@@ -26,6 +26,7 @@ def delete_file(folder_path,start_num,end_num,file_type):
 
 def rename_file(file_path,start_num,file_type):
     #获取folder_path最底层目录
+    
     for root, dirs, files in os.walk(file_path):
         #如果files为空，则跳过
         if not files:
@@ -35,20 +36,31 @@ def rename_file(file_path,start_num,file_type):
             input_folder = root 
             #获取folder_path最底层目录下的所有文件名
             file_names = os.listdir(input_folder)
+            file_names.sort(key=lambda x: int(x[:-4]))
+            print(file_names)
+            temp_num = start_num
             #遍历所有文件名
             for file_name in file_names:
                 #获取文件名的数字
                 file_num = int(os.path.split(file_name)[-1].split('.')[0])
-
+                
                 #从小到大排序，将文件名从1开始，以1递增，用file_type作为后缀保存
-                new_file_name = str(start_num) + file_type
+                #保存数字为三个字符，不足三个字符的前面补0
+                new_file_name = str(temp_num).zfill(3) + file_type
 
-                # Rename the file with a new name starting with 1
+                #Rename the file with a new name starting with 1
                 os.rename(os.path.join(input_folder, file_name), os.path.join(input_folder, new_file_name))
-                start_num+=1
+                print('Rename the file:',file_name,' to ',new_file_name)
+                temp_num += 1
+            
 
     print('Rename Done!')
 if __name__ == '__main__':
-    folder_path = '2021121308_png/CTAVG' 
-    #delete_file(folder_path,1,14,'.png')
-    rename_file(folder_path,1,'.png')
+    folder_path = r'E:\dataset\Clinic_data\2021121308_npy' ;file_type = '.npy'
+    #读取网络文件夹
+    folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\Clinic_data\2021121308_npy\Result'
+    # one(folder_path,1,14,1,'.png')
+    # rename_file(folder_path,1,file_type)
+    # delete_file(folder_path,1,14,file_type)
+    # delete_file(folder_path,58,100,file_type)
+    rename_file(folder_path,0,file_type)
