@@ -64,7 +64,7 @@ def mha_to_direct(inpput_mha,output_mha):
 
 def mha_to_equal(input_mha,fixed_mha,output_mha):
     # 读取第一个.mha图像
-    fixed_image = sitk.ReadImage(fixed_mha,outputPixelType=sitk.sitkFloat32)
+    fixed_image  = sitk.ReadImage(fixed_mha,outputPixelType=sitk.sitkFloat32)
     moving_image = sitk.ReadImage(input_mha,outputPixelType=sitk.sitkFloat32)
 
     # 创建配准对象
