@@ -53,10 +53,7 @@ def consturct_4D_image(input_patient_path,intensity='AVG'):
     #读取4D图像
     image_4D = read_4D_image(input_patient_path)
     print(image_4D.shape)
-    #print(image_4D.shape)
-    # #获取image_4D的第三维度的长度
-    # image_depth = image_4D.shape[3]
-     #如果intensity为AVG，则image_4D的第一个维度的平均值
+
     if intensity == 'AVG':
         print('OK')
         consturcted_image = np.mean(image_4D, axis=0)
@@ -85,8 +82,5 @@ def creat_prior_imag(input_patient_path,intensity='AVG',output_type='png'):
   
     print('prior image has been saved in '+output_prior_path)
 if __name__ == '__main__':
-    #read_phase_image('test_dataset0\Degraded\Phase1')
-    #read_4D_image('test_dataset0\Degraded')
-    #consturct_4D_image('test_dataset0\Degraded',intensity='AVG')
     input_path = r'E:\dataset\temp_dicom\100HM10395\png\Degraded'
     creat_prior_imag(input_path,intensity='MIP',output_type='png')
