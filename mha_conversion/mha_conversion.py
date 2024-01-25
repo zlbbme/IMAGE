@@ -75,6 +75,7 @@ def mha_resample(mha_file):
     sitk.WriteImage(resampled_image, mha_file)
 
 def convert_mha_to_png(mha_file, path_png):
+    min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)  #获取最大值
     image = sitk.ReadImage(mha_file)
     print(image.GetSize())
     img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))
@@ -90,15 +91,17 @@ def convert_mha_to_png(mha_file, path_png):
     for i in range(channel):
         img = np.zeros((weight,height), dtype=np.uint8)
         img = img_data[:,:,i]
-        img = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
-        #逆时针旋转90度
-        img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
-        #重构为512*512，插值方法为B样条插值
-        img = cv2.resize(img,(512,512),interpolation=cv2.INTER_CUBIC)
-        cv2.imwrite(path_png+'/'+str(i+1)+'.png',img)
-        print('from mha to png',i+1,'/',channel)
+        
+        img = (img-min_CT_num)/(max_CT_num-min_CT_num)*255           #灰度归一到0-255
+        
+        img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)        #逆时针旋转90度
+        
+        img = cv2.resize(img,(512,512),interpolation=cv2.INTER_CUBIC)#重构为512*512，插值方法为B样条插值
+        cv2.imwrite(path_png+'/'+str(i)+'.png',img)
+        print('from mha to png',i,'/',channel)
 
 def convert_mha_to_npy(mha_file, npy_path):
+    min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)
     image = sitk.ReadImage(mha_file)
     img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))  #[H,W,D]
     print(img_data.shape)
@@ -114,13 +117,15 @@ def convert_mha_to_npy(mha_file, npy_path):
     for i in range(channel):
         img = np.zeros((weight,height), dtype=np.float32)
         img = img_data[:,:,i]
+        #灰度归一到0-4000
+        img = (img-min_CT_num)/(max_CT_num-min_CT_num)*4000
         #逆时针旋转90度
         img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
         #重构为512*512
         img = cv2.resize(img,(512,512),interpolation=cv2.INTER_CUBIC)
         #保存为mha文件
-        np.save(npy_path+'/'+str(i+1)+'.npy',img)
-        print('from mha to npy',i+1,'/',channel)
+        np.save(npy_path+'/'+str(i)+'.npy',img)
+        print('from mha to npy',i,'/',channel)
 
 def mha_to_direct(inpput_mha,output_mha):
     # 读取第一个.mha图像

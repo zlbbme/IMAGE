@@ -134,7 +134,7 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
         for dicom_file in dicom_files:
             if dicom_file.endswith(".DCM"):
                 dicom_file_path = os.path.join(dicom_path, dicom_files)
-                print(dicom_path)
+                print(dicom_file_path)
     # 读取 DICOM 文件
                 ds = pydicom.dcmread(dicom_file_path, force=True)
                 ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
@@ -165,14 +165,14 @@ if __name__ == "__main__":
     #convert_dicom_to_npy(dicom_folder, output_folder)
     #dicom_series_to_nrrd(dicom_folder, output_folder)
     #读取npy文件并显示
-    data = np.load('./npy/45.npy')
-    #可视化显示
-    plt.imshow(data, cmap='gray')
-    plt.show()
+    # data = np.load('./npy/45.npy')
+    # #可视化显示
+    # plt.imshow(data, cmap='gray')
+    # plt.show()
     #convert_dicom_to_mha(dicom_folder, output_folder)
     #convert_dicom_to_nii(dicom_folder, output_folder)
-    # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
-    # print(max_CT_num, min_CT_num)
+    min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
+    print(max_CT_num, min_CT_num)
     # normalize_dicom_intensity(dicom_folder, 0, 4000)
     # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
     # print(max_CT_num, min_CT_num)
