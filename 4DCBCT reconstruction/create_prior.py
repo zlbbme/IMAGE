@@ -24,7 +24,7 @@ def read_phase_image(input_phase_path):
         elif file.endswith('.npy'):
             img = np.load(image_path).astype(np.uint16)
         #将图片数组添加到三维数组中
-        img_phase[:,:,num-1] = img  #[512, 512, image_depth]
+        img_phase[:,:,num] = img  #[512, 512, image_depth]
 
     assert img_phase.shape[2] == image_depth
 
@@ -58,6 +58,7 @@ def consturct_4D_image(input_patient_path,intensity='AVG'):
     # image_depth = image_4D.shape[3]
      #如果intensity为AVG，则image_4D的第一个维度的平均值
     if intensity == 'AVG':
+        print('OK')
         consturcted_image = np.mean(image_4D, axis=0)
     if intensity == 'MIP':
         consturcted_image = np.max(image_4D, axis=0)
@@ -67,23 +68,25 @@ def consturct_4D_image(input_patient_path,intensity='AVG'):
 def creat_prior_imag(input_patient_path,intensity='AVG',output_type='png'):
     #构建4D图像
     consturcted_image = consturct_4D_image(input_patient_path,intensity)
+    output_prior_path = input_patient_path+'/prior'+intensity
     #创建文件夹
-    if not os.path.exists(input_patient_path+'/prior'):
-        os.mkdir(input_patient_path+'/prior')
+    if not os.path.exists(output_prior_path):
+        os.mkdir(output_prior_path)
     #将numpy数组转换为图片
     for j in range(consturcted_image.shape[2]):
         img_single = consturcted_image[:,:,j]
         #将png_avg转为位深度为8的灰度图
         if output_type == 'png':
             img_single = Image.fromarray(np.uint8(img_single))
-            img_single.save(input_patient_path+'/prior/'+str(j+1)+'.png')
+            img_single.save(output_prior_path+'/'+str(j)+'.png')
         elif output_type == 'npy':
             img_single = np.array(img_single)
-            np.save(input_patient_path+'/prior/'+str(j+1)+'.npy',img_single)
+            np.save(output_prior_path+'/'+str(j)+'.npy',img_single)
   
-    print('prior image has been saved in '+input_patient_path+'/prior')
+    print('prior image has been saved in '+output_prior_path)
 if __name__ == '__main__':
     #read_phase_image('test_dataset0\Degraded\Phase1')
     #read_4D_image('test_dataset0\Degraded')
     #consturct_4D_image('test_dataset0\Degraded',intensity='AVG')
-    creat_prior_imag('test_dataset0\Degraded',intensity='MIP',output_type='png')
+    input_path = r'E:\dataset\temp_dicom\100HM10395\png\Degraded'
+    creat_prior_imag(input_path,intensity='MIP',output_type='png')

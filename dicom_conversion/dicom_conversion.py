@@ -122,17 +122,17 @@ def dicom_read_max_min(dicom_path):
 
 if __name__ == "__main__":
     # Usage example
-    dicom_folder = "./2021121308/CTAVG"
+    dicom_folder = r'E:\dataset\temp_dicom\100HM10395'
     output_folder = 'png'    
     #convert_dicom_to_png(dicom_folder, output_folder)
     #convert_dicom_to_npy(dicom_folder, output_folder)
     #dicom_series_to_nrrd(dicom_folder, output_folder)
     #读取npy文件并显示
-    data = np.load("./npy/39.npy")
-    #可视化显示
-    plt.imshow(data, cmap='gray')
-    plt.show()
+    # data = np.load("./npy/39.npy")
+    # #可视化显示
+    # plt.imshow(data, cmap='gray')
+    # plt.show()
     #convert_dicom_to_mha(dicom_folder, output_folder)
     #convert_dicom_to_nii(dicom_folder, output_folder)
-    #max_CT_num, min_CT_num =dicom_read_max_min(dicom_folder)
-    #print(max_CT_num, min_CT_num)
+    min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
+    print(max_CT_num, min_CT_num)
