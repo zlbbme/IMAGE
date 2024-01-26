@@ -59,7 +59,7 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             instance_number = ds.InstanceNumber
             #将数据格式转换为numpy
             pixel_array = ds.pixel_array.astype(np.int16)
-
+            pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
             pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 3000   #归一到0-4000
             #保存为npy文件
             np_filename = str(slice_num-instance_number) + '.npy'
