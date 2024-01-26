@@ -3,7 +3,7 @@ from PIL import Image
 import SimpleITK as sitk
 import numpy as np
 import pydicom
-import matplotlib.pyplot as plt
+from collections import Counter
 
 def convert_dicom_to_png(dicom_folder, output_folder):
     #判断输出文件夹是否存在，不存在则创建
@@ -25,7 +25,8 @@ def convert_dicom_to_png(dicom_folder, output_folder):
             instance_number = ds.InstanceNumber
             # 将像素值的范围调整到 [0, 255]
             pixel_array = ds.pixel_array
-
+            #将pixel_array中大于max_CT_num的值设置为max_CT_num，小于min_CT_num的值设置为min_CT_num
+            pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
             pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 255
             #print(np.min(pixel_array), np.max(pixel_array))
             pixel_array = pixel_array.astype(np.uint8)
@@ -88,7 +89,7 @@ def convert_dicom_to_nii(input_folder, output_nii):
     sitk.WriteImage(dicom_series, output_nii)
 
 def dicom_read_max_min(dicom_path):
-    max_list = []; min_list = [] ;len_dicom = 0
+    max_list = []; min_list = [] ;len_dicom = 0; pixel_list = []
     #如果dicom_path是文件
     if os.path.isfile(dicom_path):
         # 读取 DICOM 文件
@@ -97,6 +98,7 @@ def dicom_read_max_min(dicom_path):
         #获取dicom文件的instance number
         instance_number = ds.InstanceNumber
         pixel_array = ds.pixel_array
+        pixel_list.append(pixel_array)
         max_list.append(np.max(pixel_array))
         min_list.append(np.min(pixel_array))
         len_dicom = 1
@@ -115,12 +117,14 @@ def dicom_read_max_min(dicom_path):
                 #获取dicom文件的instance number
                 instance_number = ds.InstanceNumber
                 pixel_array = ds.pixel_array
+                pixel_list.append(pixel_array)
+
                 max_list.append(np.max(pixel_array))
                 min_list.append(np.min(pixel_array))
-                
-    #max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
-    max_CT_num = np.percentile(max_list, 80) ; min_CT_num = np.percentile(min_list, 20)
-    print(np.percentile(max_list, 80), np.percentile(min_list, 20))
+    
+    max_CT_num = np.min(max_list) ; min_CT_num = np.max(min_list)   #获取最大的CT值为最大值列表的最小值，最小的CT值为最小值列表的最大值，压缩可用灰度区间
+    #max_CT_num = np.percentile(max_list, 80) ; min_CT_num = np.percentile(min_list, 20)
+    #print(np.percentile(max_list, 0), np.percentile(min_list, 100))
     return min_CT_num, max_CT_num, len_dicom
 
 def normalize_image_intensity(image, min_val, max_val):
@@ -161,7 +165,7 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
 
 if __name__ == "__main__":
     # Usage example
-    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp0'
+    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CTp0'
     output_folder = 'npy'    
     #convert_dicom_to_png(dicom_folder, output_folder)
     #convert_dicom_to_npy(dicom_folder, output_folder)
