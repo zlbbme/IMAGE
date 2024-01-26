@@ -18,11 +18,11 @@ from dicom_conversion import *
 #             if instance_number == 68:
 #                 a,b,c = dicom_read_max_min(data)
 #                 print(a,b,c)
-#                 print(data)
+# #                 print(data)
             
-# npy_data = np.load(r'E:\data patient\2022032401_npy\1\10.npy')
-# print(npy_data.min(),npy_data.max())
-# # 使用matplotlib进行可视化
+# npy_data = np.load(r'E:\dataset\temp_dicom\100HM10395\npy\CTp0\10.npy')
+# # print(npy_data.min(),npy_data.max())
+# # # 使用matplotlib进行可视化
 # plt.imshow(npy_data,'gray')
 # plt.show()
 
@@ -78,13 +78,14 @@ def plot_png_histogram(png_path):
         #拼接png文件路径
         png_file_path = os.path.join(png_path,png_file)
         #读取png文件
-        png_data = plt.imread(png_file_path)
+        png_data = plt.imread(png_file_path)*255    #plt.imread()读取的是0-1之间的数，*255转换为0-255之间的数
         #绘制直方图
         plt.hist(png_data.flatten(), bins=80, color='c')
         plt.xlabel("Hounsfield Units (HU)")
         plt.ylabel("Frequency")
         plt.show()
         break
+
 #定义绘制npy文件直方图的函数
 def plot_npy_histogram(npy_path):
     #获取npy文件路径
@@ -102,14 +103,14 @@ def plot_npy_histogram(npy_path):
         plt.show()
         break
 
-# 使用你的DICOM文件路径
-dicom_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp0'
+# # 使用你的DICOM文件路径
+dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp0'
 plot_dicom_histogram(dicom_path)
 
-# 使用你的PNG文件路径
-png_path = r'E:\dataset\temp_dicom\100HM10395\png\CTp0'
-plot_png_histogram(png_path)
+# # 使用你的PNG文件路径
+# png_path = r'E:\dataset\temp_dicom\100HM10395\png\CTp0'
+# plot_png_histogram(png_path)
 
 # 使用你的NPY文件路径
-npy_path = r'E:\dataset\temp_dicom\100HM10395\npy\CTp0'
-plot_npy_histogram(npy_path)
+# npy_path = r'E:\dataset\temp_dicom\100HM10395\npy\CTp0'
+# plot_npy_histogram(npy_path)

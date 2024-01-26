@@ -59,7 +59,7 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             #将数据格式转换为numpy
             pixel_array = ds.pixel_array.astype(np.int16)
 
-            pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 4000   #归一到0-4000
+            pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 3000   #归一到0-4000
             #保存为npy文件
             np_filename = str(slice_num-instance_number) + '.npy'
             np_filepath = os.path.join(output_folder, np_filename)
@@ -118,8 +118,9 @@ def dicom_read_max_min(dicom_path):
                 max_list.append(np.max(pixel_array))
                 min_list.append(np.min(pixel_array))
                 
-    max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
-    print(np.percentile(max_list, 99.5), np.percentile(min_list, 0.5))
+    #max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
+    max_CT_num = np.percentile(max_list, 80) ; min_CT_num = np.percentile(min_list, 20)
+    print(np.percentile(max_list, 80), np.percentile(min_list, 20))
     return min_CT_num, max_CT_num, len_dicom
 
 def normalize_image_intensity(image, min_val, max_val):
