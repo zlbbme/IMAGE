@@ -119,6 +119,7 @@ def dicom_read_max_min(dicom_path):
                 min_list.append(np.min(pixel_array))
                 
     max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
+    print(np.percentile(max_list, 99.5), np.percentile(min_list, 0.5))
     return min_CT_num, max_CT_num, len_dicom
 
 def normalize_image_intensity(image, min_val, max_val):
