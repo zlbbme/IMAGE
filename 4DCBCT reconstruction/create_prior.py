@@ -7,7 +7,7 @@ import re
 def read_phase_image(input_phase_path):
     #获取input_patient_path文件夹下的所有文件夹名
     filelist = os.listdir(input_phase_path)
-    
+     
     image_depth = len(filelist) ;image_high = 512 ;image_width = 512
     #创建一个空的三维数组，用于存储图片
     img_phase = np.zeros((image_high, image_width, image_depth))
@@ -33,6 +33,8 @@ def read_phase_image(input_phase_path):
 def read_4D_image(input_patient_path):
     #获取input_patient_path文件夹下的所有文件夹名
     filelist = os.listdir(input_patient_path)
+    #剔除掉文件夹名不包含数字的文件夹，只添加10个时相的图像
+    filelist = [file for file in filelist if re.findall(r"\d+", file)] 
     #print(filelist)
     phase_num = len(filelist)
     for j ,phase in enumerate(filelist):
@@ -83,4 +85,4 @@ def creat_prior_imag(input_patient_path,intensity='AVG',output_type='png'):
     print('prior image has been saved in '+output_prior_path)
 if __name__ == '__main__':
     input_path = r'E:\dataset\temp_dicom\100HM10395\png\Degraded'
-    creat_prior_imag(input_path,intensity='MIP',output_type='png')
+    creat_prior_imag(input_path,intensity='AVG',output_type='png')

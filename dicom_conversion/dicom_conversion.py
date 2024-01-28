@@ -16,7 +16,7 @@ def convert_dicom_to_png(dicom_folder, output_folder):
         for file in files:
             if file.endswith(".DCM"):
                 dicom_path = os.path.join(root, file)
-                print(dicom_path)
+                #print(dicom_path)
                 
             # 读取 DICOM 文件
             ds = pydicom.dcmread(dicom_path, force=True)
@@ -51,7 +51,7 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
         for file in files:
             if file.endswith(".DCM"):
                 dicom_path = os.path.join(root, file)
-                print(dicom_path)
+                #print(dicom_path)
                 
             # 读取 DICOM 文件
             ds = pydicom.dcmread(dicom_path, force=True)
@@ -60,7 +60,8 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             #将数据格式转换为numpy
             pixel_array = ds.pixel_array.astype(np.int16)
             pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
-            pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 3000   #归一到0-4000
+            pixel_array = pixel_array - min_CT_num    #获取为相对电子密度，无须归一化
+            #pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 3000   #归一到0-4000
             #保存为npy文件
             np_filename = str(slice_num-instance_number) + '.npy'
             np_filepath = os.path.join(output_folder, np_filename)
@@ -165,7 +166,7 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
 
 if __name__ == "__main__":
     # Usage example
-    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CTp0'
+    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp0'
     output_folder = 'npy'    
     #convert_dicom_to_png(dicom_folder, output_folder)
     #convert_dicom_to_npy(dicom_folder, output_folder)
