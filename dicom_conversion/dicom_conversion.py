@@ -124,15 +124,15 @@ def dicom_read_max_min(dicom_path):
                     dicom_path = os.path.join(root, file)
                     #print(dicom_path)
                 # 读取 DICOM 文件
-                ds = pydicom.dcmread(dicom_path, force=True)
-                ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
-                #获取dicom文件的instance number
-                instance_number = ds.InstanceNumber
-                pixel_array = ds.pixel_array
-                pixel_list.append(pixel_array)
+                    ds = pydicom.dcmread(dicom_path, force=True)
+                    ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
+                    #获取dicom文件的instance number
+                    instance_number = ds.InstanceNumber
+                    pixel_array = ds.pixel_array
+                    pixel_list.append(pixel_array)
 
-                max_list.append(np.max(pixel_array))
-                min_list.append(np.min(pixel_array))
+                    max_list.append(np.max(pixel_array))
+                    min_list.append(np.min(pixel_array))
     if np.min(max_list) > 500:
         max_CT_num = np.min(max_list) ; min_CT_num = np.max(min_list)   #获取最大的CT值为最大值列表的最小值，最小的CT值为最小值列表的最大值，压缩可用灰度区间
     else:
@@ -179,13 +179,8 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
 
 if __name__ == "__main__":
     # Usage example
-<<<<<<< HEAD
     dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTAVG'
     # output_folder = 'npy'    
-=======
-    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp0'
-    output_folder = 'npy'    
->>>>>>> 528ea848f1cdb64e3c56e29794e565d0212a37da
     #convert_dicom_to_png(dicom_folder, output_folder)
     #convert_dicom_to_npy(dicom_folder, output_folder)
     #dicom_series_to_nrrd(dicom_folder, output_folder)

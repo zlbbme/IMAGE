@@ -107,15 +107,35 @@ def plot_npy_histogram(npy_path):
 # dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp0'
 # plot_dicom_histogram(dicom_path)
 
-# # 使用你的PNG文件路径
-png_path = r'E:\dataset\Clinic_data\2021121308\png\CBCTp40'
+# 使用你的PNG文件路径
+png_path = r'E:\dataset\temp_dicom\100HM10395\png\CBCTp1'
 plot_png_histogram(png_path)
 
-# # 使用你的NPY文件路径
-npy_path = r'E:\dataset\Dataset_For_PRIOR\test\Label\phase_1'
-plot_npy_histogram(npy_path)
+# # # 使用你的NPY文件路径
+# npy_path = r'E:\dataset\Dataset_For_PRIOR\test\Label\phase_1'
+# plot_npy_histogram(npy_path)
 
 #取出0-141中的中间50个数
 # a = np.arange(0,142)
 # print(a)
 # print(a[46:96])
+    
+# import cv2
+# #导入峰值信噪比模块
+# from skimage.metrics import peak_signal_noise_ratio as PSNR
+# #导入结构相似度模块
+# from skimage.metrics import structural_similarity as SSIM
+
+# cbct_image = r'E:\paper_code\CycleNnet\N-Net_and_CycNet-master\training_dataset\100HM10395\DegradePhase1\Recons20.png'
+# ct_image =  r'E:\paper_code\CycleNnet\N-Net_and_CycNet-master\training_dataset\100HM10395\GT_Phase1\GT20.png'
+# #读取CT图像
+# cbct_image = cv2.imread(cbct_image)
+# #读取CBCT图像
+# ct_image = cv2.imread(ct_image)
+# #计算PSNR
+# psnr = PSNR(cbct_image,ct_image)
+# #计算SSIM
+# ssim = SSIM(cbct_image,ct_image,multichannel=True)
+# #打印PSNR和SSIM
+# print('PSNR:',psnr)
+# print('SSIM:',ssim)

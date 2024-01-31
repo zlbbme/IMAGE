@@ -12,32 +12,31 @@ def batch_conversion(input_folder, output_folder, output_format):
             dicom_folder = root ; 
         #print(dicom_folder)
         #print(os.path.split(dicom_folder))
-        output_dicom_folder = os.path.join(output_folder,os.path.split(dicom_folder)[-1])
-        print(output_dicom_folder)
+        #output_dicom_folder = os.path.join(output_folder,os.path.split(dicom_folder)[-1])
+        #print(output_dicom_folder)
         if output_format == 'png':
+            output_dicom_folder = os.path.join(output_folder,os.path.split(dicom_folder)[-1])
             convert_dicom_to_png(dicom_folder, output_dicom_folder)
         elif output_format == 'npy':
+            output_dicom_folder = os.path.join(output_folder,os.path.split(dicom_folder)[-1])
             convert_dicom_to_npy(dicom_folder, output_dicom_folder)
         elif output_format == 'mha':
+            output_dicom_folder = output_folder
             convert_dicom_to_mha(dicom_folder, output_dicom_folder)
         elif output_format == 'nrrd':
+            output_dicom_folder = output_folder
             convert_dicom_to_nrrd(dicom_folder, output_dicom_folder)
         elif output_format == 'nii':
+            output_dicom_folder = output_folder
             convert_dicom_to_nii(dicom_folder, output_dicom_folder)
         else:
-            print('Don\'t support this format!  Please input png, npy, mha, nrrd or nii.')
+            print('Don\'t support this format!  Only support png, npy, mha, nrrd or nii.')
             break
             
 
 if __name__ == '__main__':
     print('Let\'s start!')
     #batch_conversion(r'E:\dataset\Clinic_data\2021121308', r'E:\dataset\Clinic_data\2021121308_png', 'png')
-<<<<<<< HEAD
     input_dicom_path = r'E:\dataset\temp_dicom\100HM10395'
-    output_path = r'E:\dataset\temp_dicom\100HM10395\mha'
-    batch_conversion(input_dicom_path, output_path, 'mha')
-=======
-    input_dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp0'
-    output_path = r'E:\dataset\temp_dicom\100HM10395\png'
-    batch_conversion(input_dicom_path, output_path, 'png')
->>>>>>> 528ea848f1cdb64e3c56e29794e565d0212a37da
+    output_path = r'E:\dataset\temp_dicom\100HM10395\nii'
+    batch_conversion(input_dicom_path, output_path, 'nii')

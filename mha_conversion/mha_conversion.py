@@ -25,13 +25,15 @@ def mha_read_max_min(mha_path):
                     mha_path = os.path.join(root, file)
                     print(mha_path)
                 # 读取 DICOM 文件
-                image = sitk.ReadImage(mha_path)
-                img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))
-                max_list.append(np.max(img_data))
-                min_list.append(np.min(img_data))
+                    image = sitk.ReadImage(mha_path)
+                    img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))
+                    max_list.append(np.max(img_data))
+                    min_list.append(np.min(img_data))
                 
-    max_CT_num = np.max(max_list)
-    min_CT_num = np.min(min_list)
+    if np.min(max_list) > 500:
+        max_CT_num = np.min(max_list) ; min_CT_num = np.max(min_list)   #获取最大的CT值为最大值列表的最小值，最小的CT值为最小值列表的最大值，压缩可用灰度区间
+    else:
+        max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
     return min_CT_num, max_CT_num, len_dicom
 
 def mha_normalization(mha_file):
@@ -76,7 +78,12 @@ def mha_resample(mha_file):
 
 def convert_mha_to_png(mha_file, path_png):
     min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)  #获取最大值
+    min_CT_num = float(min_CT_num)
+    max_CT_num = float(max_CT_num)
     image = sitk.ReadImage(mha_file)
+    #将image中大于max_CT_num的值赋值为max_CT_num，小于min_CT_num的值赋值为min_CT_num
+    image = sitk.Threshold(image, min_CT_num, max_CT_num, min_CT_num)
+    image = (image - min_CT_num) / (max_CT_num - min_CT_num) * 255
     print(image.GetSize())
     img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))
     print(img_data.shape)
@@ -92,8 +99,6 @@ def convert_mha_to_png(mha_file, path_png):
         img = np.zeros((weight,height), dtype=np.uint8)
         img = img_data[:,:,i]
         
-        img = (img-min_CT_num)/(max_CT_num-min_CT_num)*255           #灰度归一到0-255
-        
         img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)        #逆时针旋转90度
         
         img = cv2.resize(img,(512,512),interpolation=cv2.INTER_CUBIC)#重构为512*512，插值方法为B样条插值
@@ -103,6 +108,8 @@ def convert_mha_to_png(mha_file, path_png):
 def convert_mha_to_npy(mha_file, npy_path):
     min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)
     image = sitk.ReadImage(mha_file)
+    image[image > max_CT_num] = max_CT_num; image[image < min_CT_num] = min_CT_num
+    image = image - min_CT_num    #获取为相对电子密度，无须归一化
     img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))  #[H,W,D]
     print(img_data.shape)
     
@@ -118,7 +125,7 @@ def convert_mha_to_npy(mha_file, npy_path):
         img = np.zeros((weight,height), dtype=np.float32)
         img = img_data[:,:,i]
         #灰度归一到0-4000
-        img = (img-min_CT_num)/(max_CT_num-min_CT_num)*4000
+        #img = (img-min_CT_num)/(max_CT_num-min_CT_num)*4000
         #逆时针旋转90度
         img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
         #重构为512*512
@@ -127,9 +134,9 @@ def convert_mha_to_npy(mha_file, npy_path):
         np.save(npy_path+'/'+str(i)+'.npy',img)
         print('from mha to npy',i,'/',channel)
 
-def mha_to_direct(inpput_mha,output_mha):
+def mha_to_direct(input_mha,output_mha):
     # 读取第一个.mha图像
-    image = sitk.ReadImage(inpput_mha,outputPixelType=sitk.sitkFloat32)
+    image = sitk.ReadImage(input_mha,outputPixelType=sitk.sitkFloat32)
     #变换mha的方向，从[H,D,W]变成[H,W,D]
     out_image = sitk.PermuteAxes(image, [0,2,1])
 
@@ -138,10 +145,10 @@ def mha_to_direct(inpput_mha,output_mha):
     #打印维度变化
     print('from',image.GetSize(),'to',out_image.GetSize())
 
-def mha_to_equal(input_mha,fixed_mha,output_mha):
+def mha_to_equal(moving_mha,fixed_mha,output_mha):
     # 读取第一个.mha图像
     fixed_image  = sitk.ReadImage(fixed_mha,outputPixelType=sitk.sitkFloat32)
-    moving_image = sitk.ReadImage(input_mha,outputPixelType=sitk.sitkFloat32)
+    moving_image = sitk.ReadImage(moving_mha,outputPixelType=sitk.sitkFloat32)
 
     # 创建配准对象
     registration_method = sitk.ImageRegistrationMethod()
@@ -165,11 +172,16 @@ def mha_to_equal(input_mha,fixed_mha,output_mha):
 if __name__ == '__main__':
 
 
-    mha_path = r'E:\dataset\temp_mha\P1\direct\CBCTp1.mha'
-    a,b,c =mha_read_max_min(mha_path)
-    print(a,b,c)
+    # mha_path = r'E:\dataset\temp_mha\P1\direct\CBCTp1.mha'
+    # a,b,c =mha_read_max_min(mha_path)
+    # print(a,b,c)
     
-    mha_resample(mha_path)
-    mha_normalization(mha_path)
-    g,h,i =mha_read_max_min(r'E:\dataset\temp_mha\P1\direct\CBCTp1.mha')
-    print(g,h,i)
+    # mha_resample(mha_path)
+    # mha_normalization(mha_path)
+    # g,h,i =mha_read_max_min(r'E:\dataset\temp_mha\P1\direct\CBCTp1.mha')
+    # print(g,h,i)
+    moving_mha = r'E:\dataset\temp_dicom\100HM10395\mha\CBCTp1.mha'
+    fixed_mha = r'E:\dataset\temp_dicom\100HM10395\mha\CTp1.mha'
+    output_mha = r'E:\dataset\temp_dicom\100HM10395\mha\CBCTp1_equal.mha'
+    mha_to_equal(fixed_mha,moving_mha,output_mha)
+    #mha_to_direct(output_mha,output_mha)
