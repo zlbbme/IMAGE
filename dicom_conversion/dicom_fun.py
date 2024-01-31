@@ -107,15 +107,9 @@ def plot_npy_histogram(npy_path):
 # dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp0'
 # plot_dicom_histogram(dicom_path)
 
-<<<<<<< HEAD
 # # 使用你的PNG文件路径
 png_path = r'E:\dataset\Clinic_data\2021121308\png\CBCTp40'
 plot_png_histogram(png_path)
-=======
-# # # 使用你的PNG文件路径
-# png_path = r'E:\dataset\temp_dicom\100HM10395\png\CTp0'
-# plot_png_histogram(png_path)
->>>>>>> 528ea848f1cdb64e3c56e29794e565d0212a37da
 
 # # 使用你的NPY文件路径
 npy_path = r'E:\dataset\Dataset_For_PRIOR\test\Label\phase_1'

@@ -59,20 +59,11 @@ def rename_file(file_path,start_num,file_type):
 
     print('Rename Done!')
 if __name__ == '__main__':
-<<<<<<< HEAD
     folder_path = r'E:\dataset\Clinic_data\2021121308\npy' ;file_type = '.npy'
-=======
-    folder_path = r'E:\dataset\temp_dicom\100HM10395\GT\CTp0' ;file_type = '.png'
->>>>>>> 528ea848f1cdb64e3c56e29794e565d0212a37da
     #读取网络文件夹
     #folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\Clinic_data\2021121308_npy\Result'
     # one(folder_path,1,14,1,'.png')
     # rename_file(folder_path,1,file_type)
-<<<<<<< HEAD
     #delete_file(folder_path,0,14,file_type)
     delete_file(folder_path,58,100,file_type)
-=======
-    delete_file(folder_path,0,63,file_type)
-    delete_file(folder_path,113,200,file_type)
->>>>>>> 528ea848f1cdb64e3c56e29794e565d0212a37da
     rename_file(folder_path,0,file_type)
