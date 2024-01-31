@@ -148,7 +148,7 @@ def mha_to_equal(input_mha,fixed_mha,output_mha):
 
     # 设置配准方法和参数
     registration_method.SetMetricAsMeanSquares()
-    registration_method.SetOptimizerAsRegularStepGradientDescent(learningRate=0.1, minStep=1e-4, numberOfIterations=1)#只迭代一次
+    registration_method.SetOptimizerAsRegularStepGradientDescent(learningRate=0.1, minStep=1e-4, numberOfIterations=3)#只迭代一次
     registration_method.SetInitialTransform(sitk.TranslationTransform(fixed_image.GetDimension()))
 
     # 执行配准

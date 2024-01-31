@@ -108,7 +108,7 @@ dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp0'
 plot_dicom_histogram(dicom_path)
 
 # # 使用你的PNG文件路径
-png_path = r'E:\dataset\temp_dicom\100HM10395\png\CTp0'
+png_path = r'E:\dataset\Clinic_data\2021121308\png\CBCTp40'
 plot_png_histogram(png_path)
 
 # 使用你的NPY文件路径

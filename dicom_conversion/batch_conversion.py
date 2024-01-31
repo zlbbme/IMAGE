@@ -32,6 +32,6 @@ def batch_conversion(input_folder, output_folder, output_format):
 if __name__ == '__main__':
     print('Let\'s start!')
     #batch_conversion(r'E:\dataset\Clinic_data\2021121308', r'E:\dataset\Clinic_data\2021121308_png', 'png')
-    input_dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp0'
-    output_path = r'E:\dataset\temp_dicom\100HM10395\npy'
-    batch_conversion(input_dicom_path, output_path, 'npy')
+    input_dicom_path = r'E:\dataset\temp_dicom\100HM10395'
+    output_path = r'E:\dataset\temp_dicom\100HM10395\mha'
+    batch_conversion(input_dicom_path, output_path, 'mha')
