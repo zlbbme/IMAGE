@@ -4,28 +4,11 @@ import matplotlib.pyplot as plt
 import pydicom
 from dicom_conversion import *
 
-# path =r'E:\data patient\2022032401\1'
-# #遍历path下的所有文件
-# for root, dirs, files in os.walk(path):
-#     for file in files:
-#         if file.endswith(".DCM"):
-#             data = os.path.join(root, file)
-#             #读取data
-#             ds = pydicom.dcmread(data, force=True)
-#             #获得instance number
-#             instance_number = ds.InstanceNumber
-#             #如果instance number为10，则打印文件路径
-#             if instance_number == 68:
-#                 a,b,c = dicom_read_max_min(data)
-#                 print(a,b,c)
-# #                 print(data)
-            
 # npy_data = np.load(r'E:\dataset\temp_dicom\100HM10395\npy\CTp0\10.npy')
 # # print(npy_data.min(),npy_data.max())
 # # # 使用matplotlib进行可视化
 # plt.imshow(npy_data,'gray')
 # plt.show()
-
 
 # dicom_path = r'E:\dataset\Clinic_data\2021121308\CBCTAVG'
 
@@ -108,34 +91,11 @@ def plot_npy_histogram(npy_path):
 # plot_dicom_histogram(dicom_path)
 
 # 使用你的PNG文件路径
-png_path = r'E:\dataset\temp_dicom\100HM10395\png\CBCTp1'
+png_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\png'
 plot_png_histogram(png_path)
 
 # # # 使用你的NPY文件路径
 # npy_path = r'E:\dataset\Dataset_For_PRIOR\test\Label\phase_1'
 # plot_npy_histogram(npy_path)
 
-#取出0-141中的中间50个数
-# a = np.arange(0,142)
-# print(a)
-# print(a[46:96])
-    
-# import cv2
-# #导入峰值信噪比模块
-# from skimage.metrics import peak_signal_noise_ratio as PSNR
-# #导入结构相似度模块
-# from skimage.metrics import structural_similarity as SSIM
 
-# cbct_image = r'E:\paper_code\CycleNnet\N-Net_and_CycNet-master\training_dataset\100HM10395\DegradePhase1\Recons20.png'
-# ct_image =  r'E:\paper_code\CycleNnet\N-Net_and_CycNet-master\training_dataset\100HM10395\GT_Phase1\GT20.png'
-# #读取CT图像
-# cbct_image = cv2.imread(cbct_image)
-# #读取CBCT图像
-# ct_image = cv2.imread(ct_image)
-# #计算PSNR
-# psnr = PSNR(cbct_image,ct_image)
-# #计算SSIM
-# ssim = SSIM(cbct_image,ct_image,multichannel=True)
-# #打印PSNR和SSIM
-# print('PSNR:',psnr)
-# print('SSIM:',ssim)

@@ -99,8 +99,10 @@ def convert_mha_to_png(mha_file, path_png):
         img = np.zeros((weight,height), dtype=np.uint8)
         img = img_data[:,:,i]
         
-        img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)        #逆时针旋转90度
-        
+        #img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)        #逆时针旋转90度
+        img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)        #顺时针旋转90度
+        #镜面翻转
+        img = cv2.flip(img,1)
         img = cv2.resize(img,(512,512),interpolation=cv2.INTER_CUBIC)#重构为512*512，插值方法为B样条插值
         cv2.imwrite(path_png+'/'+str(i)+'.png',img)
         print('from mha to png',i,'/',channel)
@@ -180,8 +182,8 @@ if __name__ == '__main__':
     # mha_normalization(mha_path)
     # g,h,i =mha_read_max_min(r'E:\dataset\temp_mha\P1\direct\CBCTp1.mha')
     # print(g,h,i)
-    moving_mha = r'E:\dataset\temp_dicom\100HM10395\mha\CBCTp1.mha'
-    fixed_mha = r'E:\dataset\temp_dicom\100HM10395\mha\CTp1.mha'
-    output_mha = r'E:\dataset\temp_dicom\100HM10395\mha\CBCTp1_equal.mha'
+    moving_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1.mha'
+    fixed_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CTp1.mha'
+    output_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1_equal.mha'
     mha_to_equal(fixed_mha,moving_mha,output_mha)
     #mha_to_direct(output_mha,output_mha)

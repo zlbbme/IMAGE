@@ -3,7 +3,37 @@ from PIL import Image
 import SimpleITK as sitk
 import numpy as np
 import pydicom
-from collections import Counter
+
+#定义函数，使用SimpleITK将dicom序列转换为png文件
+def dicom_series_to_png(dicom_folder, output_folder):
+    #判断输出文件夹是否存在，不存在则创建
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    #读取dicom序列
+    dicom_names = sitk.ImageSeriesReader.GetGDCMSeriesFileNames(dicom_folder)
+    reader = sitk.ImageSeriesReader()
+    reader.SetFileNames(dicom_names)
+    dicom_series = reader.Execute()
+    #获取dicom序列的像素值
+    dicom_array = sitk.GetArrayFromImage(dicom_series)
+    #获取dicom序列的维度
+    dicom_array_shape = dicom_array.shape
+    print(dicom_array_shape)
+    #获取图像的最大值和最小值
+    max_CT_num = np.max(dicom_array); min_CT_num = np.min(dicom_array)
+    #遍历dicom序列的每一张图像
+    for i in range(dicom_array_shape[0]):
+        
+        #创建PIL Image对象
+        image = Image.fromarray(dicom_array[i])
+        #归一化图像
+        image = (image-min_CT_num) / (max_CT_num - min_CT_num) * 255
+        #转换图像数据类型
+        image = Image.fromarray(image.astype('uint8'))
+        #保存为png文件
+        png_filename = str(i) + '.png'
+        png_filepath = os.path.join(output_folder, png_filename)
+        image.save(png_filepath)
 
 def convert_dicom_to_png(dicom_folder, output_folder):
     #判断输出文件夹是否存在，不存在则创建
@@ -63,6 +93,7 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             pixel_array = pixel_array - min_CT_num    #获取为相对电子密度，无须归一化
             #pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 3000   #归一到0-4000
             #保存为npy文件
+            print(os.path.splitext(file)[0])
             np_filename = str(slice_num-instance_number) + '.npy'
             np_filepath = os.path.join(output_folder, np_filename)
             np.save(np_filepath, pixel_array)
@@ -123,7 +154,7 @@ def dicom_read_max_min(dicom_path):
                     len_dicom += 1
                     dicom_path = os.path.join(root, file)
                     #print(dicom_path)
-                # 读取 DICOM 文件
+                    # 读取 DICOM 文件
                     ds = pydicom.dcmread(dicom_path, force=True)
                     ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
                     #获取dicom文件的instance number
@@ -179,7 +210,7 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
 
 if __name__ == "__main__":
     # Usage example
-    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTAVG'
+    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CTp0'
     # output_folder = 'npy'    
     #convert_dicom_to_png(dicom_folder, output_folder)
     #convert_dicom_to_npy(dicom_folder, output_folder)
@@ -189,11 +220,13 @@ if __name__ == "__main__":
     # #可视化显示
     # plt.imshow(data, cmap='gray')
     # plt.show()
-    output_mha  = r'E:\dataset\temp_dicom\100HM10395\CBCTAVG\mha'
-    convert_dicom_to_mha(dicom_folder, output_mha)
+    # output_mha  = r'E:\dataset\temp_dicom\100HM10395\CBCTAVG\mha'
+    # convert_dicom_to_mha(dicom_folder, output_mha)
     #convert_dicom_to_nii(dicom_folder, output_folder)
     # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
     # print(max_CT_num, min_CT_num)
     # normalize_dicom_intensity(dicom_folder, 0, 4000)
     # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
     # print(max_CT_num, min_CT_num)
+    output_folder = r'E:\dataset\temp_dicom\100HM10395\png1'
+    dicom_series_to_png(dicom_folder, output_folder)
