@@ -40,6 +40,6 @@ if __name__ == '__main__':
     input_dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp1'
     output_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1'
     batch_conversion(input_dicom_path, output_path, 'mha')
-    mha_path = output_path+'\CTp1.mha'
-    sitk_image = sitk.ReadImage(mha_path)
-    print(sitk_image.GetSize())
+    # mha_path = r'E:\dataset\2018sydney\P1\MC_T_P1_NS\FDKGroundTruth\FDK4D_01.mha'
+    # sitk_image = sitk.ReadImage(mha_path)
+    # print(sitk_image.GetSize())

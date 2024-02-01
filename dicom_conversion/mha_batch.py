@@ -26,8 +26,8 @@ if __name__ == '__main__':
     # mha_to_equal(input_mha,fixed_mha,output_mha)
     # input_mha = r'E:\dataset\temp_mha\P2\direct\CT_01.mha'
     # output_png= r'E:\dataset\temp_mha\P2\png'
-    input_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1.mha'
-    output_png= r'E:\dataset\temp_dicom\100HM10395\CBCTp1\png'
+    input_mha = r'E:\dataset\2018sydney\P1\MC_T_P1_NS\FDKGroundTruth\FDK4D_01.mha'
+    output_png= r'E:\dataset\2018sydney\P1\MC_T_P1_NS\FDKGroundTruth\png'
     convert_mha_to_png(input_mha,output_png)
     # mha_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1_direct.mha'
     # mha_to_direct(input_mha,mha_path)
