@@ -91,7 +91,7 @@ def plot_npy_histogram(npy_path):
 # plot_dicom_histogram(dicom_path)
 
 # 使用你的PNG文件路径
-png_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\png'
+png_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_png'
 plot_png_histogram(png_path)
 
 # # # 使用你的NPY文件路径

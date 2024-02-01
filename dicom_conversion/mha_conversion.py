@@ -34,6 +34,7 @@ def mha_read_max_min(mha_path):
         max_CT_num = np.min(max_list) ; min_CT_num = np.max(min_list)   #获取最大的CT值为最大值列表的最小值，最小的CT值为最小值列表的最大值，压缩可用灰度区间
     else:
         max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
+    print('max_CT_num:',max_CT_num,'min_CT_num:',min_CT_num,'len_dicom:',len_dicom)
     return min_CT_num, max_CT_num, len_dicom
 
 def mha_normalization(mha_file):
@@ -182,8 +183,10 @@ if __name__ == '__main__':
     # mha_normalization(mha_path)
     # g,h,i =mha_read_max_min(r'E:\dataset\temp_mha\P1\direct\CBCTp1.mha')
     # print(g,h,i)
-    moving_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1.mha'
-    fixed_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CTp1.mha'
-    output_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1_equal.mha'
-    mha_to_equal(fixed_mha,moving_mha,output_mha)
+    # moving_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1.mha'
+    # fixed_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CTp1.mha'
+    # output_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1_equal.mha'
+    # mha_to_equal(fixed_mha,moving_mha,output_mha)
     #mha_to_direct(output_mha,output_mha)
+    mha_file = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
+    convert_mha_to_png(mha_file, r'E:\dataset\temp_dicom\100HM10395\CBCTp1_png')
