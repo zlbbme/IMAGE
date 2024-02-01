@@ -79,19 +79,24 @@ def mha_resample(mha_file):
 
 def convert_mha_to_png(mha_file, path_png):
     min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)  #获取最大值
-    min_CT_num = float(min_CT_num)
-    max_CT_num = float(max_CT_num)
+    min_CT_num = float(min_CT_num);max_CT_num = float(max_CT_num)
+    print(min_CT_num,max_CT_num)
+    #读取mha文件
     image = sitk.ReadImage(mha_file)
-    #将image中大于max_CT_num的值赋值为max_CT_num，小于min_CT_num的值赋值为min_CT_num
+    #将image中大于max_CT_num的值和小于min_CT_num的值赋值为min_CT_num
     image = sitk.Threshold(image, min_CT_num, max_CT_num, min_CT_num)
-    image = (image - min_CT_num) / (max_CT_num - min_CT_num) * 255
+    #重构方向
+    #image = sitk.PermuteAxes(image, [0,2,1])   #变换mha的方向，从[H,D,W]变成[H,W,D]
     print(image.GetSize())
-    img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))
+    img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))  #转换成numpy，重构方向
+    
+    image = (image - min_CT_num) / (max_CT_num - min_CT_num) * 255
+    print(np.max(image),np.min(image))
     print(img_data.shape)
     weight = img_data.shape[0]
     height = img_data.shape[1]
     channel = img_data.shape[2]
-    
+    pad_width = 512 - weight; pad_height = 512 - height
     #判断是否存在文件夹如果不存在则创建为文件夹
     if not os.path.exists(path_png):
         os.makedirs(path_png)
@@ -101,10 +106,12 @@ def convert_mha_to_png(mha_file, path_png):
         img = img_data[:,:,i]
         
         #img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)        #逆时针旋转90度
-        img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)        #顺时针旋转90度
+        #img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)        #顺时针旋转90度
         #镜面翻转
         img = cv2.flip(img,1)
-        img = cv2.resize(img,(512,512),interpolation=cv2.INTER_CUBIC)#重构为512*512，插值方法为B样条插值
+        #以0灰度填充图像为512*512
+        img = np.pad(img,((0,pad_width),(0,pad_height)),'constant',constant_values=(0,0))
+        #保存为png文件
         cv2.imwrite(path_png+'/'+str(i)+'.png',img)
         print('from mha to png',i,'/',channel)
 
@@ -181,7 +188,7 @@ if __name__ == '__main__':
     
     # mha_resample(mha_path)
     # mha_normalization(mha_path)
-    # g,h,i =mha_read_max_min(r'E:\dataset\temp_mha\P1\direct\CBCTp1.mha')
+    # g,h,i =mha_read_max_min(r'E:\dataset\2018sydney\P1\MC_T_P1_NS\FDKGroundTruth\FDK3D.mha')
     # print(g,h,i)
     # moving_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1.mha'
     # fixed_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CTp1.mha'
