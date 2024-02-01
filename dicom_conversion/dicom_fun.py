@@ -85,17 +85,50 @@ def plot_npy_histogram(npy_path):
         plt.ylabel("Frequency")
         plt.show()
         break
-
+#定义绘制mha文件直方图的函数
+def plot_mha_histogram(mha_path):
+    
+    #读取mha文件
+    mha_data = sitk.ReadImage(mha_path)
+    #获取mha文件的像素值
+    mha_data = sitk.GetArrayFromImage(mha_data).transpose((2, 1, 0))
+    #绘制直方图
+    plt.hist(mha_data.flatten(), bins=80, color='c')
+    plt.xlabel("Hounsfield Units (HU)")
+    plt.ylabel("Frequency")
+    plt.show()
+    
 # # # 使用你的DICOM文件路径
-# dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp0'
+# dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp1'
 # plot_dicom_histogram(dicom_path)
 
-# 使用你的PNG文件路径
-png_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_png'
-plot_png_histogram(png_path)
+# # 使用你的PNG文件路径
+# png_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_png'
+# plot_png_histogram(png_path)
 
 # # # 使用你的NPY文件路径
 # npy_path = r'E:\dataset\Dataset_For_PRIOR\test\Label\phase_1'
 # plot_npy_histogram(npy_path)
 
+#使用mha文件路径
+# mha_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
+# plot_mha_histogram(mha_path)
 
+import numpy as np
+import matplotlib.pyplot as plt
+mha_file = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
+image = sitk.ReadImage(mha_file)
+img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))
+
+#计算img_data的灰度值范围
+max_CT_num = np.max(img_data)
+min_CT_num = np.min(img_data)
+print('max_CT_num:',max_CT_num,'min_CT_num:',min_CT_num)
+#计算img_data的灰度值最集中的区间
+img_data = img_data.flatten()
+img_data = img_data[img_data>0]
+img_data = img_data[img_data<2000]
+plt.hist(img_data, bins=80, color='c')
+plt.xlabel("Hounsfield Units (HU)")
+plt.ylabel("Frequency")
+plt.show()

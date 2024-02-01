@@ -84,14 +84,16 @@ def convert_mha_to_png(mha_file, path_png):
     #读取mha文件
     image = sitk.ReadImage(mha_file)
     #将image中大于max_CT_num的值和小于min_CT_num的值赋值为min_CT_num
-    image = sitk.Threshold(image, min_CT_num, max_CT_num, min_CT_num)
+    #image = sitk.Threshold(image, min_CT_num, max_CT_num, min_CT_num)
     #重构方向
     #image = sitk.PermuteAxes(image, [0,2,1])   #变换mha的方向，从[H,D,W]变成[H,W,D]
     print(image.GetSize())
     img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))  #转换成numpy，重构方向
-    
-    image = (image - min_CT_num) / (max_CT_num - min_CT_num) * 255
-    print(np.max(image),np.min(image))
+    #归一到4000
+    img_data = img_data - min_CT_num
+    #截取到3000
+    img_data[img_data>3000] = 3000
+    img_data = (img_data - min_CT_num) / (max_CT_num - min_CT_num) * 255
     print(img_data.shape)
     weight = img_data.shape[0]
     height = img_data.shape[1]
@@ -106,7 +108,7 @@ def convert_mha_to_png(mha_file, path_png):
         img = img_data[:,:,i]
         
         #img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)        #逆时针旋转90度
-        #img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)        #顺时针旋转90度
+        img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)        #顺时针旋转90度
         #镜面翻转
         img = cv2.flip(img,1)
         #以0灰度填充图像为512*512
@@ -195,5 +197,5 @@ if __name__ == '__main__':
     # output_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\CBCTp1_equal.mha'
     # mha_to_equal(fixed_mha,moving_mha,output_mha)
     #mha_to_direct(output_mha,output_mha)
-    mha_file = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
-    convert_mha_to_png(mha_file, r'E:\dataset\temp_dicom\100HM10395\CBCTp1_png')
+    mha_file = r'E:\dataset\temp_dicom\100HM10395\CTp1.mha'
+    convert_mha_to_png(mha_file, r'E:\dataset\temp_dicom\100HM10395\CTp1_png')

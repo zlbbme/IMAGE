@@ -165,6 +165,7 @@ def dicom_read_max_min(dicom_path):
                     max_list.append(np.max(pixel_array))
                     min_list.append(np.min(pixel_array))
     if np.min(max_list) > 500:
+        print('min_CT_num:>500')
         max_CT_num = np.min(max_list) ; min_CT_num = np.max(min_list)   #获取最大的CT值为最大值列表的最小值，最小的CT值为最小值列表的最大值，压缩可用灰度区间
     else:
         max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
@@ -210,7 +211,7 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
 
 if __name__ == "__main__":
     # Usage example
-    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CTp0'
+    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1'
     # output_folder = 'npy'    
     #convert_dicom_to_png(dicom_folder, output_folder)
     #convert_dicom_to_npy(dicom_folder, output_folder)
@@ -228,5 +229,5 @@ if __name__ == "__main__":
     # normalize_dicom_intensity(dicom_folder, 0, 4000)
     # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
     # print(max_CT_num, min_CT_num)
-    output_folder = r'E:\dataset\temp_dicom\100HM10395\png1'
-    dicom_series_to_png(dicom_folder, output_folder)
+    output_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_png1'
+    convert_dicom_to_png(dicom_folder, output_folder)
