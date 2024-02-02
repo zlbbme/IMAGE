@@ -12,8 +12,8 @@ def mha_read_max_min(mha_path):
         # 读取mha文件
         image = sitk.ReadImage(mha_path)
         img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))
-        max_list.append(np.max(img_data))
-        min_list.append(np.min(img_data))
+        max_list.append(np.max(img_data));min_list.append(np.min(img_data))
+        max_CT_num = np.max(max_list)*0.8 ;min_CT_num = np.min(min_list)*0.8
         len_dicom = 1
 
     if os.path.isdir(mha_path):
@@ -30,10 +30,13 @@ def mha_read_max_min(mha_path):
                     max_list.append(np.max(img_data))
                     min_list.append(np.min(img_data))
                 
-    if np.min(max_list) > 500:
-        max_CT_num = np.min(max_list) ; min_CT_num = np.max(min_list)   #获取最大的CT值为最大值列表的最小值，最小的CT值为最小值列表的最大值，压缩可用灰度区间
-    else:
-        max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
+    # if np.min(max_list) > 500:
+    #     print('max CT value >500')
+    #     max_CT_num = np.min(max_list) ; min_CT_num = np.max(min_list)   #获取最大的CT值为最大值列表的最小值，最小的CT值为最小值列表的最大值，压缩可用灰度区间
+    # else:
+    #max_CT_num = np.max(max_list) ; min_CT_num = np.min(min_list)
+    #max_CT_num = np.percentile(max_list, 0.5) ; min_CT_num = np.percentile(min_list, 0.1)   #获取最大值和最小值的百分位数
+    max_CT_num = 908 ; min_CT_num = -2096  #获取最大值和最小值的百分位数
     print('max_CT_num:',max_CT_num,'min_CT_num:',min_CT_num,'len_dicom:',len_dicom)
     return min_CT_num, max_CT_num, len_dicom
 
@@ -78,8 +81,13 @@ def mha_resample(mha_file):
     sitk.WriteImage(resampled_image, mha_file)
 
 def convert_mha_to_png(mha_file, path_png):
-    min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)  #获取最大值
-    min_CT_num = float(min_CT_num);max_CT_num = float(max_CT_num)
+    #如果文件名为CBCT的mha文件，则最大值为3000
+    if 'CBCT' in mha_file:
+        max_CT_num = 1000; min_CT_num = -2000
+    else:
+        max_CT_num = 2000; min_CT_num = -1000
+    # min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)  #获取最大值
+    # min_CT_num = float(min_CT_num);max_CT_num = float(max_CT_num)
     print(min_CT_num,max_CT_num)
     #读取mha文件
     image = sitk.ReadImage(mha_file)
@@ -89,11 +97,12 @@ def convert_mha_to_png(mha_file, path_png):
     #image = sitk.PermuteAxes(image, [0,2,1])   #变换mha的方向，从[H,D,W]变成[H,W,D]
     print(image.GetSize())
     img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))  #转换成numpy，重构方向
-    #归一到4000
+    #归一从0-开始
     img_data = img_data - min_CT_num
     #截取到3000
     img_data[img_data>3000] = 3000
-    img_data = (img_data - min_CT_num) / (max_CT_num - min_CT_num) * 255
+    #img_data = (img_data - min_CT_num) / (max_CT_num - min_CT_num) * 255
+    img_data = img_data / 3000 * 255
     print(img_data.shape)
     weight = img_data.shape[0]
     height = img_data.shape[1]
@@ -198,4 +207,4 @@ if __name__ == '__main__':
     # mha_to_equal(fixed_mha,moving_mha,output_mha)
     #mha_to_direct(output_mha,output_mha)
     mha_file = r'E:\dataset\temp_dicom\100HM10395\CTp1.mha'
-    convert_mha_to_png(mha_file, r'E:\dataset\temp_dicom\100HM10395\CTp1_png')
+    convert_mha_to_png(mha_file, r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_png')

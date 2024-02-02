@@ -102,9 +102,9 @@ def plot_mha_histogram(mha_path):
 # dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp1'
 # plot_dicom_histogram(dicom_path)
 
-# # 使用你的PNG文件路径
-# png_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_png'
-# plot_png_histogram(png_path)
+# 使用你的PNG文件路径
+png_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_mha_png'
+plot_png_histogram(png_path)
 
 # # # 使用你的NPY文件路径
 # npy_path = r'E:\dataset\Dataset_For_PRIOR\test\Label\phase_1'
