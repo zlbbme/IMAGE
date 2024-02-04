@@ -36,15 +36,15 @@ def compare(recon0, recon1, verbose=True):
 
 if __name__ == '__main__':
 
-    recon0 = np.load(r'E:\dataset\Clinic_data\2021121308\npy\CBCTp10\40.npy')
-    recon1 = np.load(r'E:\dataset\Clinic_data\2021121308\npy\CTp10\39.npy')
-    mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
-    print(mse_recon, ssim_recon, psnr_recon)
-    cbct_image = r'E:\dataset\temp_dicom\100HM10395\CBCTp1\png\0.png'
-    ct_image =  r'E:\dataset\temp_dicom\100HM10395\CBCTp1\png2\0.png'
+    # recon0 = np.load(r'E:\dataset\Clinic_data\2021121308\npy\CBCTp10\40.npy')
+    # recon1 = np.load(r'E:\dataset\Clinic_data\2021121308\npy\CTp10\39.npy')
+    # mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
+    # print(mse_recon, ssim_recon, psnr_recon)
+    cbct_image = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_dcm_png\0.png'
+    ct_image =  r'E:\dataset\temp_dicom\100HM10395\CBCTp1_mha_png\0.png'
     #读取CBCT图像
     cbct_image = cv2.imread(cbct_image)
     #读取CT图像
     ct_image = cv2.imread(ct_image)
-    mse_recon, ssim_recon, psnr_recon = compare(ct_image, cbct_image) 
+    mse_recon, ssim_recon, psnr_recon = compare( cbct_image,ct_image)
     print(mse_recon, ssim_recon, psnr_recon)

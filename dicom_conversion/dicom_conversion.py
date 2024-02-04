@@ -56,8 +56,11 @@ def convert_dicom_to_png(dicom_folder, output_folder):
             # 将像素值的范围调整到 [0, 255]
             pixel_array = ds.pixel_array
             #将pixel_array中大于max_CT_num的值设置为max_CT_num，小于min_CT_num的值设置为min_CT_num
-            pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
-            pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 255
+            # pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
+            # pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 255
+            pixel_array = pixel_array - min_CT_num
+            pixel_array[pixel_array > 3000] = 3000 
+            pixel_array = pixel_array / 3000 * 255
             #print(np.min(pixel_array), np.max(pixel_array))
             pixel_array = pixel_array.astype(np.uint8)
  
@@ -87,11 +90,14 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             ds = pydicom.dcmread(dicom_path, force=True)
             ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian  #‘FileMetaDataset’ object has no attribute ‘TransferSyntaxUID’ 错误
             instance_number = ds.InstanceNumber
+            # pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
+            # pixel_array = pixel_array - min_CT_num    #获取为相对电子密度，无须归一化
+            #pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 3000   #归一到0-4000
+
+            pixel_array = pixel_array - min_CT_num
+            pixel_array[pixel_array > 3000] = 3000 
             #将数据格式转换为numpy
             pixel_array = ds.pixel_array.astype(np.int16)
-            pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
-            pixel_array = pixel_array - min_CT_num    #获取为相对电子密度，无须归一化
-            #pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 3000   #归一到0-4000
             #保存为npy文件
             print(os.path.splitext(file)[0])
             np_filename = str(slice_num-instance_number) + '.npy'
@@ -212,7 +218,7 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
 
 if __name__ == "__main__":
     # Usage example
-    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CTp1'
+    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1'
     # output_folder = 'npy'    
     #convert_dicom_to_png(dicom_folder, output_folder)
     #convert_dicom_to_npy(dicom_folder, output_folder)
@@ -230,5 +236,5 @@ if __name__ == "__main__":
     # normalize_dicom_intensity(dicom_folder, 0, 4000)
     # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
     # print(max_CT_num, min_CT_num)
-    output_folder = r'E:\dataset\temp_dicom\100HM10395\CTp1_dcm_png'
+    output_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_dcm_png'
     convert_dicom_to_png(dicom_folder, output_folder)
