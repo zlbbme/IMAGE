@@ -22,10 +22,10 @@ def compare(recon0, recon1, verbose=True):
         win_size = None
 
     ssim_recon = SSIM(recon0, recon1,
-                       data_range=recon0.max() - recon0.min(), win_size=win_size)
-
+                       data_range = recon0.max() - recon0.min(), win_size=win_size)
+    #recon0.max() - recon0.min()
     psnr_recon = PSNR(recon0, recon1,
-                                         data_range=recon0.max() - recon0.min())
+                        data_range=recon0.max() - recon0.min())
 
     if verbose:
         err_string = 'MSE: {:.8f}, SSIM: {:.3f}, PSNR: {:.3f}'
@@ -36,12 +36,12 @@ def compare(recon0, recon1, verbose=True):
 
 if __name__ == '__main__':
 
-    # recon0 = np.load(r'E:\dataset\Clinic_data\2021121308\npy\CBCTp10\40.npy')
-    # recon1 = np.load(r'E:\dataset\Clinic_data\2021121308\npy\CTp10\39.npy')
-    # mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
-    # print(mse_recon, ssim_recon, psnr_recon)
-    cbct_image = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_dcm_png\0.png'
-    ct_image =  r'E:\dataset\temp_dicom\100HM10395\CBCTp1_mha_png\0.png'
+    recon0 = np.load(r'E:\dataset\temp_dicom\100HM10395\CBCTp1_mha_npy\10.npy')
+    recon1 = np.load(r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_npy\10.npy')
+    mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
+    print(mse_recon, ssim_recon, psnr_recon)
+    cbct_image = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_mha_png1\10.png'
+    ct_image =  r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_png1\10.png'
     #读取CBCT图像
     cbct_image = cv2.imread(cbct_image)
     #读取CT图像

@@ -85,7 +85,7 @@ def convert_mha_to_png(mha_file, path_png):
     if 'CBCT' in mha_file:
         max_CT_num = 1000; min_CT_num = -2000
     else:
-        max_CT_num = 2000; min_CT_num = -1000
+        max_CT_num = 500; min_CT_num = -1000
     # min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)  #获取最大值
     # min_CT_num = float(min_CT_num);max_CT_num = float(max_CT_num)
     print(min_CT_num,max_CT_num)
@@ -99,10 +99,11 @@ def convert_mha_to_png(mha_file, path_png):
     img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))  #转换成numpy，重构方向
     #归一从0到最大值
     img_data = img_data - min_CT_num
-    #截取到3000
-    img_data[img_data>3000] = 3000
+    #截取0到(max_CT_num-min_CT_num)
+    img_data[img_data>(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num
     #img_data = (img_data - min_CT_num) / (max_CT_num - min_CT_num) * 255
-    img_data = img_data / 3000 * 255
+    
+    img_data = img_data / (max_CT_num-min_CT_num) * 255 #值域从[0,max_CT_num-min_CT_num]->[0,255]
     print('mha to numpy shape:',img_data.shape)
     weight = img_data.shape[0]
     height = img_data.shape[1]
@@ -130,21 +131,28 @@ def convert_mha_to_png(mha_file, path_png):
 
 def convert_mha_to_npy(mha_file, npy_path):
     # min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)   #悉尼数据集适用
-    
     # image[image > max_CT_num] = max_CT_num; image[image < min_CT_num] = min_CT_num
+
+    #如果文件名为CBCT的mha文件，则最大值为3000，TCIA的数据集适用
     if 'CBCT' in mha_file:
         max_CT_num = 1000; min_CT_num = -2000
     else:
-        max_CT_num = 2000; min_CT_num = -1000
-    print('min_CT_num:',min_CT_num,'max_CT_num:',max_CT_num)
-    
+        max_CT_num = 500; min_CT_num = -1000
+    print(min_CT_num,max_CT_num)
+    #读取mha文件
     image = sitk.ReadImage(mha_file)
+    #将image中大于max_CT_num的值和小于min_CT_num的值赋值为min_CT_num
+    #image = sitk.Threshold(image, min_CT_num, max_CT_num, min_CT_num)
+    #重构方向
+    #image = sitk.PermuteAxes(image, [0,2,1])   #变换mha的方向，从[H,D,W]变成[H,W,D]
     print('orgin mha shape',image.GetSize())
-    img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))  #转换为numpy方向，[H,W,D]
+    img_data = sitk.GetArrayFromImage(image).transpose((2, 1, 0))  #转换成numpy，重构方向
+    #归一从0到最大值
+    img_data = img_data - min_CT_num
+    #截取0到(max_CT_num-min_CT_num)
+    img_data[img_data>(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num
+    img_data = img_data / (max_CT_num-min_CT_num) * 2500 #值域从[0,max_CT_num-min_CT_num]->[0,255]
     print('mha to numpy shape:',img_data.shape)
-    image = image - min_CT_num    #获取为相对电子密度，从0到最大值
-    img_data[img_data>3000] = 3000  #截取到3000
-
     weight = img_data.shape[0]
     height = img_data.shape[1]
     channel = img_data.shape[2]
@@ -187,13 +195,27 @@ def mha_to_equal(moving_mha,fixed_mha,output_mha):
     # 读取第一个.mha图像
     fixed_image  = sitk.ReadImage(fixed_mha,outputPixelType=sitk.sitkFloat32)
     moving_image = sitk.ReadImage(moving_mha,outputPixelType=sitk.sitkFloat32)
+    # 获取fixed_image的大小和原点
+    fixed_size = fixed_image.GetSize()    ;moving_size = moving_image.GetSize()
+    fixed_origin = fixed_image.GetOrigin();moving_origin = moving_image.GetOrigin()
+    # 计算fixed_image的中心
+    fixed_center = [int(fixed_origin[i] + fixed_size[i] / 2) for i in range(len(fixed_size))]  ;moving_center = [moving_origin[i] + moving_size[i] / 2 for i in range(len(moving_size))]
+    print(fixed_center,moving_center)
     # 创建配准对象
     registration_method = sitk.ImageRegistrationMethod()
 
     # 设置配准方法和参数
-    registration_method.SetMetricAsMeanSquares()
-    registration_method.SetOptimizerAsRegularStepGradientDescent(learningRate=0.1, minStep=1e-4, numberOfIterations=1)#只迭代一次
+    #registration_method.SetMetricAsMeanSquares()
+    #registration_method.SetOptimizerAsRegularStepGradientDescent(learningRate=0.1, minStep=1e-4, numberOfIterations=1)#只迭代一次
+    registration_method.SetMetricAsCorrelation()
+    registration_method.SetOptimizerAsRegularStepGradientDescent(
+        learningRate=2.0,
+        minStep=1e-4,
+        numberOfIterations=200,
+        gradientMagnitudeTolerance=1e-8,
+    )
     registration_method.SetInitialTransform(sitk.TranslationTransform(fixed_image.GetDimension()))
+
 
     # 执行配准
     transform = registration_method.Execute(fixed_image, moving_image)
@@ -201,36 +223,32 @@ def mha_to_equal(moving_mha,fixed_mha,output_mha):
     # 应用变换到移动图像
     registered_image = sitk.Resample(moving_image, fixed_image, transform, sitk.sitkLinear, 0.0)
 
-    #使用demons算法进行配准
-    matcher = sitk.HistogramMatchingImageFilter()
-    matcher.SetNumberOfHistogramLevels(1024)
-    matcher.SetNumberOfMatchPoints(7)
-    matcher.ThresholdAtMeanIntensityOn()
-    registered_image = matcher.Execute(registered_image, fixed_image)
+    # 创建一个ROI
+    roi_size = [50, 50, 50]  # ROI的大小
+    roi_center = fixed_center #[0, 0, 0]  # ROI的中心
+    roi = sitk.Image(roi_size, sitk.sitkUInt8)
+    roi.TransformIndexToPhysicalPoint(roi_center)
+    # 设置ROI
+    registration_method.SetMetricFixedMask(roi)
 
-    # The basic Demons Registration Filter
-    # Note there is a whole family of Demons Registration algorithms included in
-    # SimpleITK
-    demons = sitk.DemonsRegistrationFilter()
-    demons.SetNumberOfIterations(10)
-    # Standard deviation for Gaussian smoothing of displacement field
-    demons.SetStandardDeviations(1.0)
+    registration_method.SetMetricAsCorrelation()
+    registration_method.SetOptimizerAsRegularStepGradientDescent(
+        learningRate=2.0,
+        minStep=1e-4,
+        numberOfIterations=5,
+        gradientMagnitudeTolerance=1e-8,
+    )
+    registration_method.SetInitialTransform(sitk.TranslationTransform(fixed_image.GetDimension()))
 
-    demons.AddCommand(sitk.sitkIterationEvent, lambda: command_iteration(demons))
 
-    displacementField = demons.Execute(fixed_image, registered_image)
+    # 执行配准
+    transform = registration_method.Execute(registered_image, moving_image)
 
-    print("-------")
-    print(f"Number Of Iterations: {demons.GetElapsedIterations()}")
-    print(f" RMS: {demons.GetRMSChange()}")
-
-    outTx  = sitk.DisplacementFieldTransform(displacementField)
-    sitk.WriteImage(outTx , output_mha)
-
-    
+    # 应用变换到移动图像
+    registered_image = sitk.Resample(registered_image, fixed_image, transform, sitk.sitkLinear, 0.0)
 
     # # 保存配准后的图像，确保和fixed_image具有相同的原点、方向和间距和维度
-    # sitk.WriteImage(registered_image, output_mha)
+    sitk.WriteImage(registered_image, output_mha)
     #打印维度变化
     print('from',moving_image.GetSize(),'to',registered_image.GetSize())
 
@@ -245,10 +263,10 @@ if __name__ == '__main__':
     # mha_normalization(mha_path)
     # g,h,i =mha_read_max_min(r'E:\dataset\2018sydney\P1\MC_T_P1_NS\FDKGroundTruth\FDK3D.mha')
     # print(g,h,i)
-    moving_mha = r'E:\dataset\temp_dicom\100HM10395\CTp1.mha'
-    fixed_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
-    output_mha = r'E:\dataset\temp_dicom\100HM10395\CTp1_equal.mha'
-    mha_to_equal(moving_mha,fixed_mha,output_mha)
+    # moving_mha = r'E:\dataset\temp_dicom\100HM10395\CTp1.mha'
+    # fixed_mha = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
+    # output_mha = r'E:\dataset\temp_dicom\100HM10395\CTp1_equal.mha'
+    # mha_to_equal(moving_mha,fixed_mha,output_mha)
     #mha_to_direct(output_mha,output_mha)
-    mha_file = output_mha  #r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
-    convert_mha_to_png(mha_file, r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_png1')
+    mha_file =  r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'#output_mha 
+    convert_mha_to_npy(mha_file, r'E:\dataset\temp_dicom\100HM10395\CBCTp1_mha_npy')
