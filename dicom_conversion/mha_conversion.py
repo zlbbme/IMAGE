@@ -127,7 +127,7 @@ def convert_mha_to_png(mha_file, path_png):
         img = np.pad(img,((0,pad_width),(0,pad_height)),'constant',constant_values=(0,0))
         #保存为png文件
         cv2.imwrite(path_png+'/'+str(i)+'.png',img)
-        print('from mha to png',i,'/',channel)
+    print('mha shape:',img_data.shape,'to %dpng shape:'%(channel))
 
 def convert_mha_to_npy(mha_file, npy_path):
     # min_CT_num, max_CT_num, len_dicom = mha_read_max_min(mha_file)   #悉尼数据集适用
@@ -151,7 +151,7 @@ def convert_mha_to_npy(mha_file, npy_path):
     img_data = img_data - min_CT_num
     #截取0到(max_CT_num-min_CT_num)
     img_data[img_data>(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num
-    img_data = img_data / (max_CT_num-min_CT_num) * 2500 #值域从[0,max_CT_num-min_CT_num]->[0,255]
+    img_data = img_data / (max_CT_num-min_CT_num) * 2500 #值域从[0,max_CT_num-min_CT_num]->[0,2500]
     print('mha to numpy shape:',img_data.shape)
     weight = img_data.shape[0]
     height = img_data.shape[1]
@@ -175,7 +175,7 @@ def convert_mha_to_npy(mha_file, npy_path):
         img = np.pad(img,((0,pad_width),(0,pad_height)),'constant',constant_values=(0,0))
         #保存为npy文件
         np.save(npy_path+'/'+str(i)+'.npy',img)
-        print('from mha to npy',i,'/',channel)
+    print('mha shape:',img_data.shape,'to %dnpy shape:'%(channel))
 
 def mha_to_direct(input_mha,output_mha):
     # 读取第一个.mha图像
@@ -221,7 +221,7 @@ def mha_to_equal(moving_mha,fixed_mha,output_mha):
     transform = registration_method.Execute(fixed_image, moving_image)
 
     # 应用变换到移动图像
-    registered_image = sitk.Resample(moving_image, fixed_image, transform, sitk.sitkLinear, 0.0)
+    registered_image = sitk.Resample(moving_image, fixed_image, transform, sitk.sitkLinear, -1000.0)   #默认填充是0，这里填充-1000
 
     # 创建一个ROI
     roi_size = [50, 50, 50]  # ROI的大小

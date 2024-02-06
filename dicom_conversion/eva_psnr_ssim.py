@@ -36,12 +36,12 @@ def compare(recon0, recon1, verbose=True):
 
 if __name__ == '__main__':
 
-    recon0 = np.load(r'E:\dataset\Clinic_data\2021121308_npy\CBCTdegraded\CBCTp00\010.npy')
-    recon1 = np.load(r'E:\dataset\Clinic_data\2021121308_npy\GT\CTp00\010.npy')
+    recon0 = np.load(r'E:\dataset\temp_npy\119HM10395\CBCTp5\15.npy')
+    recon1 = np.load(r'E:\dataset\temp_npy\119HM10395\CTp5\15.npy')
     mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
     print(mse_recon, ssim_recon, psnr_recon)
-    cbct_image = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_mha_png1\10.png'
-    ct_image =  r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_png1\10.png'
+    cbct_image = r'E:\dataset\temp_png\119HM10395\CBCTp5\15.png'
+    ct_image =  r'E:\dataset\temp_png\119HM10395\CTp5\15.png'
     #读取CBCT图像
     cbct_image = cv2.imread(cbct_image)
     #读取CT图像
