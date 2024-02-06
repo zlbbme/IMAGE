@@ -39,10 +39,14 @@ def convert_dicom_to_png(dicom_folder, output_folder):
     #判断输出文件夹是否存在，不存在则创建
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-    min_CT_num,max_CT_num,slice_num  = dicom_read_max_min(dicom_folder)
+    #min_CT_num,max_CT_num,slice_num  = dicom_read_max_min(dicom_folder)
+    if 'CBCT' in dicom_folder:
+        min_CT_num = 0;max_CT_num = 1200
+    else:
+        min_CT_num = 0;max_CT_num = 1800   #Clinical CT的CT值范围为0-1500
     #遍历dicom文件夹下的所有文件，如果是dicom文件则转换为png文件
     for root, dirs, files in os.walk(dicom_folder):
-         
+        slice_num = len(files)
         for file in files:
             if file.endswith(".DCM"):
                 dicom_path = os.path.join(root, file)
@@ -53,15 +57,11 @@ def convert_dicom_to_png(dicom_folder, output_folder):
             ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
             #获取dicom文件的instance number
             instance_number = ds.InstanceNumber
-            # 将像素值的范围调整到 [0, 255]
             pixel_array = ds.pixel_array
-            #将pixel_array中大于max_CT_num的值设置为max_CT_num，小于min_CT_num的值设置为min_CT_num
-            # pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
-            # pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 255
-            pixel_array = pixel_array - min_CT_num
-            pixel_array[pixel_array > 3000] = 3000 
-            pixel_array = pixel_array / 3000 * 255
-            #print(np.min(pixel_array), np.max(pixel_array))
+            pixel_array = pixel_array - min_CT_num     #将像素值的范围调整到 [0, 最大值] 
+            pixel_array[pixel_array >(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num  #截断到[0,1500]
+            pixel_array = pixel_array / (max_CT_num-min_CT_num) * 255          #归一到2500
+            #将数据格式转换为np.uint8
             pixel_array = pixel_array.astype(np.uint8)
  
             # 创建 PIL Image 对象
@@ -77,10 +77,14 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
     #判断输出文件夹是否存在，不存在则创建
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-    min_CT_num,max_CT_num,slice_num  = dicom_read_max_min(dicom_folder)
+    #min_CT_num,max_CT_num,slice_num  = dicom_read_max_min(dicom_folder)
+    if 'CBCT' in dicom_folder:
+        min_CT_num = 0;max_CT_num = 1200
+    else:
+        min_CT_num = 0;max_CT_num = 1800   #Clinical CT的CT值范围为0-1500
     #遍历dicom文件夹下的所有文件，如果是dicom文件则转换为png文件
     for root, dirs, files in os.walk(dicom_folder):
-
+        slice_num = len(files)
         for file in files:
             if file.endswith(".DCM"):
                 dicom_path = os.path.join(root, file)
@@ -90,14 +94,12 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             ds = pydicom.dcmread(dicom_path, force=True)
             ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian  #‘FileMetaDataset’ object has no attribute ‘TransferSyntaxUID’ 错误
             instance_number = ds.InstanceNumber
-            # pixel_array[pixel_array > max_CT_num] = max_CT_num; pixel_array[pixel_array < min_CT_num] = min_CT_num
-            # pixel_array = pixel_array - min_CT_num    #获取为相对电子密度，无须归一化
-            #pixel_array = (pixel_array - min_CT_num) / (max_CT_num - min_CT_num) * 3000   #归一到0-4000
-
-            pixel_array = pixel_array - min_CT_num
-            pixel_array[pixel_array > 3000] = 3000 
+            pixel_array = ds.pixel_array
+            pixel_array = pixel_array - min_CT_num     #将像素值的范围调整到 [0, 最大值] 
+            pixel_array[pixel_array >(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num  #截断到[0,1500]
+            pixel_array = pixel_array / (max_CT_num-min_CT_num) * 2500          #归一到2500
             #将数据格式转换为numpy
-            pixel_array = ds.pixel_array.astype(np.int16)
+            pixel_array = pixel_array.astype(np.int16)
             #保存为npy文件
             print(os.path.splitext(file)[0])
             np_filename = str(slice_num-instance_number) + '.npy'
@@ -237,4 +239,4 @@ if __name__ == "__main__":
     # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
     # print(max_CT_num, min_CT_num)
     output_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_dcm_png'
-    convert_dicom_to_png(dicom_folder, output_folder)
+    #convert_dicom_to_png(dicom_folder, output_folder)

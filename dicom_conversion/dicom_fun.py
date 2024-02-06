@@ -97,18 +97,19 @@ def plot_mha_histogram(mha_path):
     plt.xlabel("Hounsfield Units (HU)")
     plt.ylabel("Frequency")
     plt.show()
-    
-# # # 使用你的DICOM文件路径
-# dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp1'
-# plot_dicom_histogram(dicom_path)
 
+# # # 使用你的DICOM文件路径
+dicom_path = r'E:\dataset\Clinic_data\2021121308\CBCTp5'
+plot_dicom_histogram(dicom_path)
+CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
+print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
 # 使用你的PNG文件路径
 # png_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_png1'
 # plot_png_histogram(png_path)
 
 # # 使用你的NPY文件路径
-npy_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_npy'
-plot_npy_histogram(npy_path)
+# npy_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_npy'
+# plot_npy_histogram(npy_path)
 
 #使用mha文件路径
 # mha_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
