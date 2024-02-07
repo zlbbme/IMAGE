@@ -83,4 +83,4 @@ if __name__ == '__main__':
     # delete_file(folder_path,50,76,file_type)
     # rename_file(folder_path,0,file_type)
     Patient_ID = '2023022304'
-    Clinic_collate(Patient_ID,19,62)
+    Clinic_collate(Patient_ID,19,62) #retain files in [19,62] and rename the files in the folder!
