@@ -1,7 +1,7 @@
 import os
 
 def delete_file(folder_path,start_num,end_num,file_type):
-    
+    start_num = int(str(start_num).zfill(3))   ; end_num = int(str(end_num).zfill(3))
     #获取folder_path最底层目录
     for root, dirs, files in os.walk(folder_path):
         #如果files为空，则跳过
@@ -16,15 +16,15 @@ def delete_file(folder_path,start_num,end_num,file_type):
             for file_name in file_names:
                 #print(os.path.split(file_name))
                 #获取文件名的数字
-                file_num = int(os.path.split(file_name)[-1].split('.')[0])
+                file_num = int(str(os.path.split(file_name)[-1].split('.')[0]).zfill(3))
                 #判断文件名的数字是否在start_num和end_num之间，数字为3个字符，不足三个字符的前面补0
-                print(file_num.zfill(3),start_num.zfill(3),end_num.zfill(3))
+                print(file_num,start_num,end_num)
                 #print(file_num)
-                if file_num.zfill(3) in range(start_num.zfill(3),end_num.zfill(3)):
-                    print('OK')
+                if file_num in range(start_num,end_num):
                     # Delete the file
-                    print('Delete the file: ',file_name)
+                    
                     os.remove(os.path.join(input_folder, file_name))
+                    print('Delete the file: ',file_name)
     print('Delete Done!')
 
 def rename_file(file_path,start_num,file_type):
@@ -47,9 +47,9 @@ def rename_file(file_path,start_num,file_type):
                 #获取文件名的数字
                 file_num = int(os.path.split(file_name)[-1].split('.')[0])
                 
-                #从小到大排序，将文件名从1开始，以1递增，用file_type作为后缀保存
+                #从小到大排序，将文件名从0开始，以1递增，用file_type作为后缀保存
                 #保存数字为三个字符，不足三个字符的前面补0
-                new_file_name = str(temp_num).zfill(3) + file_type
+                new_file_name = str(temp_num) + file_type  #.zfill(3)
 
                 #Rename the file with a new name starting with 1
                 os.rename(os.path.join(input_folder, file_name), os.path.join(input_folder, new_file_name))
@@ -58,12 +58,29 @@ def rename_file(file_path,start_num,file_type):
             
 
     print('Rename Done!')
+
+def Clinic_collate(Patient_ID,end1,start2):
+    "retain files in [end1,start2] and rename the files in the folder!]"
+    
+    folder_png_path = os.path.join(r'E:\dataset\temp_png',Patient_ID)
+    folder_npy_path = os.path.join(r'E:\dataset\temp_npy',Patient_ID)
+    rename_file(folder_png_path,0,file_type = '.png');              rename_file(folder_npy_path,0,file_type = '.npy')
+
+    delete_file(folder_png_path,0,end1,file_type = '.png');    delete_file(folder_png_path,start2+1,1000,file_type = '.png')
+
+    delete_file(folder_npy_path,0,end1,file_type = '.npy');    delete_file(folder_npy_path,start2+1,1000,file_type = '.npy')
+
+    rename_file(folder_png_path,0,file_type = '.png');rename_file(folder_npy_path,0,file_type = '.npy')
+
+    print('Collate Done!\n Please check the folder:',folder_png_path,' and ',folder_npy_path,' for the results!')
 if __name__ == '__main__':
-    folder_path = r'E:\dataset\Clinic_data\2021121308' ;file_type = '.png'
-    #读取网络文件夹
-    #folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\Clinic_data\2021121308_npy\Result'
-    # one(folder_path,1,14,1,'.png')
-    # rename_file(folder_path,1,file_type)
-    #delete_file(folder_path,0,14,file_type)
-    delete_file(folder_path,1,76,file_type)
-    #rename_file(folder_path,0,file_type)
+    # folder_path = r'E:\dataset\temp_npy\test_2022090604' ;file_type = '.npy'
+    # #读取网络文件夹
+    # #folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\Clinic_data\2021121308_npy\Result'
+    # # one(folder_path,1,14,1,'.png')
+    # rename_file(folder_path,0,file_type)
+    # delete_file(folder_path,0,15,file_type)
+    # delete_file(folder_path,50,76,file_type)
+    # rename_file(folder_path,0,file_type)
+    Patient_ID = '2023013020'
+    Clinic_collate(Patient_ID,15,60)
