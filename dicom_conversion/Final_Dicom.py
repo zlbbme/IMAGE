@@ -87,7 +87,7 @@ def Clinic_png(patient_path):
         if files[0].endswith(".DCM"):
             dicom_folder = root ; 
             
-        out_png_path = patient_path.replace('Clinic_data','temp_png')
+        out_png_path = patient_path.replace('temp_dicom','temp_png')
         print(dicom_folder,out_png_path)
         batch_conversion.batch_conversion(dicom_folder, out_png_path, 'png')
 
@@ -101,7 +101,7 @@ def Clinic_npy(patient_path):
         if files[0].endswith(".DCM"):
             dicom_folder = root ; 
             
-        out_png_path = patient_path.replace('Clinic_data','temp_npy')
+        out_png_path = patient_path.replace('temp_dicom','temp_npy')
         print(dicom_folder,out_png_path)
         batch_conversion.batch_conversion(dicom_folder, out_png_path, 'npy')
 
@@ -123,7 +123,7 @@ if __name__ == '__main__':
     #     print('The',i,'th patient is done!')
     # patient_path = r'E:\dataset\Clinic_data\2021121308'
     # Clinic_npy(patient_path)
-    Clinic_path = r'E:\dataset\Clinic_data'
+    Clinic_path = r'E:\dataset\temp_dicom'
     for patient in os.listdir(Clinic_path):
         patient_path = os.path.join(Clinic_path,patient)
         

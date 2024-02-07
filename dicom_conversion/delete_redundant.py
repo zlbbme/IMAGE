@@ -66,9 +66,9 @@ def Clinic_collate(Patient_ID,end1,start2):
     folder_npy_path = os.path.join(r'E:\dataset\temp_npy',Patient_ID)
     rename_file(folder_png_path,0,file_type = '.png');              rename_file(folder_npy_path,0,file_type = '.npy')
 
-    delete_file(folder_png_path,0,end1,file_type = '.png');    delete_file(folder_png_path,start2+1,1000,file_type = '.png')
+    delete_file(folder_png_path,0,end1,file_type = '.png');    delete_file(folder_png_path,start2,1000,file_type = '.png')
 
-    delete_file(folder_npy_path,0,end1,file_type = '.npy');    delete_file(folder_npy_path,start2+1,1000,file_type = '.npy')
+    delete_file(folder_npy_path,0,end1,file_type = '.npy');    delete_file(folder_npy_path,start2,1000,file_type = '.npy')
 
     rename_file(folder_png_path,0,file_type = '.png');rename_file(folder_npy_path,0,file_type = '.npy')
 
@@ -83,4 +83,4 @@ if __name__ == '__main__':
     # delete_file(folder_path,50,76,file_type)
     # rename_file(folder_path,0,file_type)
     Patient_ID = '2023013020'
-    Clinic_collate(Patient_ID,15,60)
+    Clinic_collate(Patient_ID,45,60)
