@@ -60,7 +60,7 @@ def rename_file(file_path,start_num,file_type):
     print('Rename Done!')
 
 def Clinic_collate(Patient_ID,end1,start2):
-    "retain files in [end1,start2] and rename the files in the folder!]"
+    "retain files in [end1,start2] and rename the files in the folder!"
     
     folder_png_path = os.path.join(r'E:\dataset\temp_png',Patient_ID)
     folder_npy_path = os.path.join(r'E:\dataset\temp_npy',Patient_ID)
