@@ -99,17 +99,17 @@ def plot_mha_histogram(mha_path):
     plt.show()
 
 # # # 使用你的DICOM文件路径
-dicom_path = r'E:\dataset\Clinic_data\2021121308\CBCTp5'
+dicom_path = r'E:\dataset\monaco_output_dicom\104HM10395\CBCTp6'
 plot_dicom_histogram(dicom_path)
-CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
-print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
+# CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
+# print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
 # 使用你的PNG文件路径
-# png_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_png1'
-# plot_png_histogram(png_path)
+png_path = r'E:\dataset\temp_png\104HM10395\CBCTp6'
+plot_png_histogram(png_path)
 
-# # 使用你的NPY文件路径
-# npy_path = r'E:\dataset\temp_dicom\100HM10395\CTp1_mha_npy'
-# plot_npy_histogram(npy_path)
+# 使用你的NPY文件路径
+npy_path = r'E:\dataset\temp_npy\104HM10395\CBCTp6'
+plot_npy_histogram(npy_path)
 
 #使用mha文件路径
 # mha_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'

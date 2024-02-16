@@ -40,8 +40,8 @@ if __name__ == '__main__':
     recon1 = np.load(r'E:\dataset\temp_npy\test_2022090604\CTp3\25.npy')
     mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
     print('npy',mse_recon, ssim_recon, psnr_recon)
-    cbct_image = r'E:\dataset\temp_png\test_2022090604\CBCTp1\25.png'
-    ct_image =  r'E:\dataset\temp_png\test_2022090604\CTp1\25.png'
+    cbct_image = r'E:\dataset\temp_png\100HM10395\CBCTAVG\25.png'
+    ct_image =  r'E:\dataset\temp_png\100HM10395\priorAVG\25.png'
     #读取CBCT图像
     cbct_image = cv2.imread(cbct_image)
     #读取CT图像

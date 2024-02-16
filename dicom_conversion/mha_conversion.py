@@ -100,7 +100,12 @@ def convert_mha_to_png(mha_file, path_png):
     #归一从0到最大值
     img_data = img_data - min_CT_num
     #截取0到(max_CT_num-min_CT_num)
+    if 'CBCT' in mha_file:
+        img_data[img_data<0] = 0;  img_data[img_data>(max_CT_num-min_CT_num+100)] = 0
+    else:
+        img_data[img_data<0] = 0; 
     img_data[img_data>(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num
+    
     #img_data = (img_data - min_CT_num) / (max_CT_num - min_CT_num) * 255
     
     img_data = img_data / (max_CT_num-min_CT_num) * 255 #值域从[0,max_CT_num-min_CT_num]->[0,255]
@@ -150,6 +155,10 @@ def convert_mha_to_npy(mha_file, npy_path):
     #归一从0到最大值
     img_data = img_data - min_CT_num
     #截取0到(max_CT_num-min_CT_num)
+    if 'CBCT' in mha_file:
+        img_data[img_data<0] = 0;  img_data[img_data>(max_CT_num-min_CT_num+100)] = 0
+    else:
+        img_data[img_data<0] = 0; 
     img_data[img_data>(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num
     img_data = img_data / (max_CT_num-min_CT_num) * 2500 #值域从[0,max_CT_num-min_CT_num]->[0,2500]
     print('mha to numpy shape:',img_data.shape)
