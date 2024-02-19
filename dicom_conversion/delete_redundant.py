@@ -74,7 +74,7 @@ def Clinic_collate(Patient_ID,end1,start2):
 
     print('Collate Done!\n Please check the folder:',folder_png_path,' and ',folder_npy_path,' for the results!')
 if __name__ == '__main__':
-    folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\temp_data\P28' ;file_type = '.npy'
+    folder_path = r'E:\dataset\temp_delete' ;file_type = '.dcm'
     # #读取网络文件夹
     #folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\Clinic_data\2021121308_npy\Result'
     

@@ -42,16 +42,16 @@ def plot_dicom_histogram(dicom_path):
         #获取instance number
         instance_number = ds.InstanceNumber
         #如果instance number为75，则打印文件路径
-        if instance_number == 50:
-            print(dicom_file_path)
-            #获取dicom文件的像素值
-            pixel_array = ds.pixel_array
-            #绘制直方图
-            plt.hist(pixel_array.flatten(), bins=80, color='c')
-            plt.xlabel("Hounsfield Units (HU)")
-            plt.ylabel("Frequency")
-            plt.show()
-            break
+        #if instance_number == 50:
+        print(dicom_file_path)
+        #获取dicom文件的像素值
+        pixel_array = ds.pixel_array
+        #绘制直方图
+        plt.hist(pixel_array.flatten(), bins=80, color='c')
+        plt.xlabel("Hounsfield Units (HU)")
+        plt.ylabel("Frequency")
+        plt.show()
+        #break
 #定义绘制png文件直方图的函数
 def plot_png_histogram(png_path):
     #获取png文件路径
@@ -99,20 +99,20 @@ def plot_mha_histogram(mha_path):
     plt.show()
 
 # 使用你的DICOM文件路径
-# dicom_path = r'E:\dataset\monaco_output_dicom\104HM10395\CBCTp6'
-# plot_dicom_histogram(dicom_path)
+dicom_path = r'E:\dataset\temp_delete\dcm'
+plot_dicom_histogram(dicom_path)
 # # CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
 # # print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
 # 使用你的PNG文件路径
-png_path = r'E:\dataset\temp_png\112HM10395\CBCTpriorAVG'
-plot_png_histogram(png_path)
+# png_path = r'E:\dataset\temp_png\112HM10395\CBCTpriorAVG'
+# plot_png_histogram(png_path)
 
 # 使用你的NPY文件路径
 # npy_path = r'E:\dataset\temp_npy\104HM10395\CBCTp6'
 # plot_npy_histogram(npy_path)
 
-npy_path = r'E:\dataset\temp_npy\112HM10395\CBCTpriorAVG'
-plot_npy_histogram(npy_path)
+# npy_path = r'E:\dataset\temp_npy\112HM10395\CBCTpriorAVG'
+# plot_npy_histogram(npy_path)
 #使用mha文件路径
 # mha_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
 # plot_mha_histogram(mha_path)
