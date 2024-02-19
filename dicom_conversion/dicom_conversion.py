@@ -3,6 +3,8 @@ from PIL import Image
 import SimpleITK as sitk
 import numpy as np
 import pydicom
+import numpy as np
+import pydicom
 
 #定义函数，使用SimpleITK将dicom序列转换为png文件
 def dicom_series_to_png(dicom_folder, output_folder):
@@ -217,6 +219,30 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
                 # 保存修改后的 DICOM 文件
                 ds.save_as(dicom_file_path)
                
+def convert_npy_to_dcm(npy_file, dcm_file):
+    # Load the .npy file
+    image = np.load(npy_file)
+
+    # Create a new DICOM dataset
+    ds = pydicom.Dataset()
+
+    # Set the required DICOM attributes
+    ds.Rows, ds.Columns = image.shape
+    ds.PixelData = image.tobytes()
+    ds.SamplesPerPixel = 1
+    ds.PhotometricInterpretation = "MONOCHROME2"
+    ds.PixelRepresentation = 0
+    ds.BitsStored = 16
+    ds.BitsAllocated = 16
+    ds.HighBit = 15
+
+    # Save the DICOM dataset to .dcm file
+    ds.save_as(dcm_file)
+
+# Usage example
+npy_file = 'path/to/input.npy'
+dcm_file = 'path/to/output.dcm'
+convert_npy_to_dcm(npy_file, dcm_file)
 
 if __name__ == "__main__":
     # Usage example

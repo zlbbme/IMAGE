@@ -10,10 +10,7 @@ def batch_conversion(input_folder, output_folder, output_format):
         #只要files为.DCM后缀文件，则获取上一层文件名
         if files[0].endswith(".DCM"):
             dicom_folder = root ; 
-        #print(dicom_folder)
-        #print(os.path.split(dicom_folder))
-        #output_dicom_folder = os.path.join(output_folder,os.path.split(dicom_folder)[-1])
-        #print(output_dicom_folder)
+        
         if output_format == 'png':
             output_dicom_folder = os.path.join(output_folder,os.path.split(dicom_folder)[-1])
             convert_dicom_to_png(dicom_folder, output_dicom_folder)
