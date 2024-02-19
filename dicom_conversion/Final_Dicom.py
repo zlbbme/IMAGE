@@ -150,7 +150,7 @@ def Clinic_npy(patient_path):
 
 if __name__ == '__main__':
     print('Let\'s start!')
-    for i in range (20):
+    for i in range (1):
         
         TCIA_PATH = r'E:\dataset\monaco_output_dicom'
         patient_path = TCIA_PATH+'\\1'+'%02dHM10395'%(i) 

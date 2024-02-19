@@ -21,7 +21,7 @@ def read_phase_image(input_phase_path):
         #打开图像并转换成数组
         if file.endswith('.png'):
             img = np.array(Image.open(image_path)).astype(np.uint8)
-            img[img<1] = 0 ;img[img>254] = 0
+            img[img<1] = 0 ;img[img>254] = 254
         elif file.endswith('.npy'):
             img = np.load(image_path).astype(np.uint16)
         #将图片数组添加到三维数组中
@@ -89,15 +89,15 @@ def creat_prior_imag(input_patient_path,intensity='AVG',output_type='png'):
   
     print('prior image has been saved in '+output_prior_path)
 
-def batch_construct_4D_image(input_path):
+def batch_construct_4D_image(input_path,output_type):
     #获取input_path文件夹下的所有文件夹名
     patient_list = os.listdir(input_path)
     for patient in patient_list:
 
         input_patient_path = os.path.join(input_path, patient)
-        creat_prior_imag(input_patient_path,intensity='AVG',output_type='png')
-        creat_prior_imag(input_patient_path,intensity='MIP',output_type='png')
+        creat_prior_imag(input_patient_path,intensity='AVG',output_type=output_type)
+        creat_prior_imag(input_patient_path,intensity='MIP',output_type=output_type)
 
 if __name__ == '__main__':
     input_path = r'E:\dataset\temp_png'
-    batch_construct_4D_image(input_path)
+    batch_construct_4D_image(input_path,output_type='png')

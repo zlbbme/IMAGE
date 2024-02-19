@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pydicom
 from dicom_conversion import *
 
-# npy_data = np.load(r'E:\dataset\temp_dicom\100HM10395\npy\CTp0\10.npy')
+# npy_data = np.load(r'E:\dataset\temp_npy\104HM10395\CBCTpriorAVG\20.npy')
 # # print(npy_data.min(),npy_data.max())
 # # # 使用matplotlib进行可视化
 # plt.imshow(npy_data,'gray')
@@ -98,19 +98,21 @@ def plot_mha_histogram(mha_path):
     plt.ylabel("Frequency")
     plt.show()
 
-# # # 使用你的DICOM文件路径
-dicom_path = r'E:\dataset\monaco_output_dicom\104HM10395\CBCTp6'
-plot_dicom_histogram(dicom_path)
-# CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
-# print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
+# 使用你的DICOM文件路径
+# dicom_path = r'E:\dataset\monaco_output_dicom\104HM10395\CBCTp6'
+# plot_dicom_histogram(dicom_path)
+# # CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
+# # print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
 # 使用你的PNG文件路径
-png_path = r'E:\dataset\temp_png\104HM10395\CBCTp6'
+png_path = r'E:\dataset\temp_png\112HM10395\CBCTpriorAVG'
 plot_png_histogram(png_path)
 
 # 使用你的NPY文件路径
-npy_path = r'E:\dataset\temp_npy\104HM10395\CBCTp6'
-plot_npy_histogram(npy_path)
+# npy_path = r'E:\dataset\temp_npy\104HM10395\CBCTp6'
+# plot_npy_histogram(npy_path)
 
+npy_path = r'E:\dataset\temp_npy\112HM10395\CBCTpriorAVG'
+plot_npy_histogram(npy_path)
 #使用mha文件路径
 # mha_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
 # plot_mha_histogram(mha_path)
