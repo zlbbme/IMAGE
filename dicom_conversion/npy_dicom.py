@@ -39,7 +39,7 @@ def npy2nii(npy_path):
         #获取npy_file中的数字
         num = int(re.findall(r'\d+', npy_file)[0])
         
-        npy_data = np.load(os.path.join(npy_path,npy_file)).astype(np.float32)
+        npy_data = np.load(os.path.join(npy_path,npy_file)).astype(np.int16)
         #创建空的npy数组
         volumn_data [:,:,num]= npy_data
     
@@ -51,10 +51,19 @@ def npy2nii(npy_path):
     nib.save(img, nii_file)
     print('npy to nii is done!\n %s has write'%(nii_file))
 
+#截断npy文件的灰度值到[0,1500]
+def truncate_npy(npy_path):
+    for npy_file in os.listdir(npy_path):
+        npy_data = np.load(os.path.join(npy_path,npy_file))
+        npy_data[npy_data<0] = 0;   npy_data[npy_data>1500] = 1500
+        #归一到[0,2500]
+        npy_data = (npy_data/1500)*2500
+        np.save(os.path.join(npy_path,npy_file),npy_data) #覆盖原文件
+
 if __name__ == '__main__':
     print('Let\'s npy to dicom!')
     # dicom_path = r'E:\dataset\temp_delete\dcm'
     # batch_npy2dicom(dicom_path)
-    npy_path = r'E:\dataset\temp_npy\100HM10395\CTp0'
+    npy_path = r'E:\dataset\temp_npy\100HM10395\CBCTp0'
     npy2nii(npy_path)
     
