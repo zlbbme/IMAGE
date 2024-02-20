@@ -218,43 +218,6 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
                 ds.PixelData = normalized_pixel_array.tobytes()
                 # 保存修改后的 DICOM 文件
                 ds.save_as(dicom_file_path)
-               
-def convert_npy_to_dcm(npy_folder, output_folder):
-    #判断输出文件夹是否存在，不存在则创建
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    if os.path.isdir(npy_folder):
-    #遍历文件夹下的所有文件，获取后缀为.DCM的文件
-        for root, dirs, files in os.walk(npy_folder):
-            temp_folder = root
-            for file in files:
-                if file.endswith(".npy"):
-                # Load the .npy file
-                    image = np.load(os.path.join(temp_folder, file))
-
-                    # Create a new DICOM dataset
-                    ds = pydicom.Dataset()
-
-                    # Set the required DICOM attributes
-                    ds.Rows, ds.Columns = image.shape
-                    ds.PixelData = image.tobytes()
-                    ds.SamplesPerPixel = 1
-                    ds.PhotometricInterpretation = "MONOCHROME2"
-                    ds.PixelRepresentation = 0
-                    ds.BitsStored = 16
-                    ds.BitsAllocated = 16
-                    ds.HighBit = 15
-                    # 设置字节顺序和值表示
-                    ds.is_little_endian = True
-                    ds.is_implicit_VR = True
-                    output_dicom_folder = os.path.join(output_folder,os.path.split(temp_folder)[-1])
-                    print(output_dicom_folder)
-                    if not os.path.exists(output_dicom_folder):
-                        os.makedirs(output_dicom_folder)
-                    dcm_file = os.path.join(output_dicom_folder,file.replace( '.npy', '.dcm'))
-                    # Save the DICOM dataset to .dcm file
-                    #ds.save_as(dcm_file)
-
 
 
 if __name__ == "__main__":
@@ -280,4 +243,4 @@ if __name__ == "__main__":
     output_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_dcm_png'
     #convert_dicom_to_png(dicom_folder, output_folder)
     npy_folder = r'E:\dataset\temp_npy\101HM10395' ;output_folder = r'E:\dataset\temp_dicom'
-    convert_npy_to_dcm(npy_folder, output_folder)
+    
