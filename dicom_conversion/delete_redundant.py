@@ -74,13 +74,14 @@ def Clinic_collate(Patient_ID,end1,start2):
 
     print('Collate Done!\n Please check the folder:',folder_png_path,' and ',folder_npy_path,' for the results!')
 if __name__ == '__main__':
-    folder_path = r'E:\dataset\temp_delete' ;file_type = '.dcm'
+    for i in range (10):
+        
+        folder_path = r'/Data/SaveBibMip-SX/eva_data/Clinic_data/test_clinic/CTp'+str(i) ;file_type = '.npy'
+        rename_file(folder_path,1,file_type)
+        #delete_file(folder_path,44,76,file_type)
+    #     delete_file(folder_path,44,76,file_type)#从0开始,从44开始删除
     # #读取网络文件夹
-    #folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\Clinic_data\2021121308_npy\Result'
-    
-    rename_file(folder_path,0,file_type)
-    # delete_file(folder_path,0,15,file_type)
-    # delete_file(folder_path,50,76,file_type)
+    # folder_path = r'E:\dataset\temp_new\new_DCM' ;file_type = '.DCM'
     # rename_file(folder_path,0,file_type)
     # Patient_ID = '2023022304'
     # Clinic_collate(Patient_ID,19,62) #retain files in [19,62] and rename the files in the folder!

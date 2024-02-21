@@ -8,7 +8,7 @@ def batch_conversion(input_folder, output_folder, output_format):
         if not files:
             continue
         #只要files为.DCM后缀文件，则获取上一层文件名
-        if files[0].endswith(".DCM"):
+        if files[0].endswith(".DCM") or files[0].endswith(".dcm"):
             dicom_folder = root ; 
         
         if output_format == 'png':
@@ -34,9 +34,9 @@ def batch_conversion(input_folder, output_folder, output_format):
 if __name__ == '__main__':
     print('Let\'s start!')
     #batch_conversion(r'E:\dataset\Clinic_data\2021121308', r'E:\dataset\Clinic_data\2021121308_png', 'png')
-    input_dicom_path = r'E:\dataset\temp_dicom\100HM10395\CTp1'
-    output_path = r'E:\dataset\temp_dicom\100HM10395'
-    batch_conversion(input_dicom_path, output_path, 'mha')
+    input_dicom_path = r'E:\dataset\Clinic_data\2023021508'
+    output_path = r'E:\dataset\temp_npy\test_clinic'
+    batch_conversion(input_dicom_path, output_path, 'npy')
     # mha_path = output_path+'\CTp1.mha'
     # sitk_image = sitk.ReadImage(mha_path)
     # print(sitk_image.GetSize())
