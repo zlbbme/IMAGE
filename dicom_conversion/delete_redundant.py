@@ -126,13 +126,13 @@ if __name__ == '__main__':
         #delete_file(folder_path,44,76,file_type)
     #     delete_file(folder_path,44,76,file_type)#从0开始,从44开始删除
     # #读取网络文件夹
-    # folder_path = r'E:\dataset\temp_new\new_DCM' ;file_type = '.DCM'
-    # rename_file(folder_path,0,file_type)
+    folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\TCIA_data' ;file_type = '.npy'
+    rename_file(folder_path,1,file_type)
     # Patient_ID = '2023022304'
     # Clinic_collate(Patient_ID,19,62) #retain files in [19,62] and rename the files in the folder!
 
     #去除多余字母
-    folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\Training_data\sim_data' ;file_type = '.npy'
-    #cut_english(folder_path,file_type)
-    #rename_file(folder_path,0,file_type)
-    rename_folder(folder_path)
+    # folder_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\Training_data\sim_data' ;file_type = '.npy'
+    # #cut_english(folder_path,file_type)
+    # #rename_file(folder_path,0,file_type)
+    # rename_folder(folder_path)
