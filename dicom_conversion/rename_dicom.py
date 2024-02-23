@@ -18,6 +18,9 @@ def rename_dicom_files(directory):
 
 # Usage example
 for i in range (10):
-    directory = r"E:\dataset\Clinic_data\2023021508\CBCTp"+str(i)
+    directory = r"E:\dataset\test_clinic\Fraction3\CBCTp"+str(i)
     rename_dicom_files(directory)
+
+prior_directory = r"E:\dataset\test_clinic\Fraction3\CBCTpriorAVG"
+rename_dicom_files(prior_directory)
 

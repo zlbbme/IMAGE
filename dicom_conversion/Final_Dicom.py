@@ -122,14 +122,16 @@ def TCIA_2format(patient_path,out_path):
 def Clinic_png(patient_path):
     #遍历patient_path下的所有文件
     for root, dirs, files in os.walk(patient_path):
+        
         #如果files为空，则跳过
         if not files:
             continue
         #只要files为.DCM后缀文件，则获取上一层文件名
-        if files[0].endswith(".DCM"):
+        if files[0].endswith(".DCM") or files[0].endswith('.dcm'):
+            
             dicom_folder = root ; 
             
-        out_png_path = patient_path.replace('monaco_output_dicom','temp_png')
+        out_png_path = patient_path.replace('temp_dicom','temp_png')
         print(dicom_folder,out_png_path)
         batch_conversion.batch_conversion(dicom_folder, out_png_path, 'png')
 
@@ -140,37 +142,41 @@ def Clinic_npy(patient_path):
         if not files:
             continue
         #只要files为.DCM后缀文件，则获取上一层文件名
-        if files[0].endswith(".DCM"):
+        if files[0].endswith(".DCM" ) or files[0].endswith('.dcm'):
             dicom_folder = root ; 
             
-        out_png_path = patient_path.replace('monaco_output_dicom','temp_npy')
+        out_png_path = patient_path.replace('temp_dicom','temp_npy')
         print(dicom_folder,out_png_path)
         batch_conversion.batch_conversion(dicom_folder, out_png_path, 'npy')
 
 
 if __name__ == '__main__':
     print('Let\'s start!')
-    for i in range (1):
+    # for i in range (1):
         
-        TCIA_PATH = r'E:\dataset\monaco_output_dicom'
-        patient_path = TCIA_PATH+'\\1'+'%02dHM10395'%(i) 
-        #print(patient_path)
-        out_path = patient_path.replace('monaco_output_dicom','temp_png')
-        # TCIA_png(patient_path,out_path)
-        # out_path = patient_path.replace('monaco_output_dicom','temp_npy')
-        # TCIA_npy(patient_path,out_path)
-        temp_mha_path = patient_path.replace('monaco_output_dicom','temp_mha')
-        TCIA_2format(patient_path,out_path)
-        shutil.rmtree(temp_mha_path)
-        #完成进度条
-        print('The',i,'th patient is done!')
-
-    # Clinic_path = r'E:\dataset\temp_dicom'
-    # for patient in os.listdir(Clinic_path):
-    #     patient_path = os.path.join(Clinic_path,patient)
-        
-    #     Clinic_png(patient_path)
-        
-    #     Clinic_npy(patient_path)
+    #     TCIA_PATH = r'E:\dataset\monaco_output_dicom'
+    #     patient_path = TCIA_PATH+'\\1'+'%02dHM10395'%(i) 
+    #     #print(patient_path)
+    #     out_path = patient_path.replace('monaco_output_dicom','temp_png')
+    #     # TCIA_png(patient_path,out_path)
+    #     # out_path = patient_path.replace('monaco_output_dicom','temp_npy')
+    #     # TCIA_npy(patient_path,out_path)
+    #     temp_mha_path = patient_path.replace('monaco_output_dicom','temp_mha')
+    #     TCIA_2format(patient_path,out_path)
+    #     shutil.rmtree(temp_mha_path)
     #     #完成进度条
-    #     print(patient,'is done!')
+    #     print('The',i,'th patient is done!')
+
+    Clinic_path = r'E:\dataset\temp_dicom'
+    for patient in os.listdir(Clinic_path):
+        patient_path = os.path.join(Clinic_path,patient)
+        
+        Clinic_png(patient_path)
+        
+        Clinic_npy(patient_path)
+        #完成进度条
+        print(patient,'is done!')
+    # test_path = r'E:\dataset\temp_dicom\Fraction1'
+    # Clinic_png(test_path)
+    
+    # Clinic_npy(test_path)

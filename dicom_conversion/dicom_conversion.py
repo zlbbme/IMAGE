@@ -50,7 +50,7 @@ def convert_dicom_to_png(dicom_folder, output_folder):
     for root, dirs, files in os.walk(dicom_folder):
         slice_num = len(files)
         for file in files:
-            if file.endswith(".DCM"):
+            if file.endswith(".DCM") or file.endswith(".dcm"):
                 dicom_path = os.path.join(root, file)
                 #print(dicom_path)
                 

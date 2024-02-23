@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import pydicom
 from dicom_conversion import *
 
-npy_data = np.load(r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\npy\Old_result\Phase3\Processed15.npy')
-# print(npy_data.min(),npy_data.max())
-# # 使用matplotlib进行可视化
-plt.imshow(npy_data,'gray')
-plt.show()
+# npy_data = np.load(r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\npy\Old_result\Phase3\Processed15.npy')
+# # print(npy_data.min(),npy_data.max())
+# # # 使用matplotlib进行可视化
+# plt.imshow(npy_data,'gray')
+# plt.show()
 
 # dicom_path = r'E:\dataset\Clinic_data\2021121308\CBCTAVG'
 
@@ -108,8 +108,8 @@ def plot_mha_histogram(mha_path):
 # plot_png_histogram(png_path)
 
 # 使用你的NPY文件路径
-# npy_path = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\PRIOR_test\Sparse\phase_4'
-# plot_npy_histogram(npy_path)
+npy_path = r'E:\dataset\temp_npy\Fraction2\CBCTp2'
+plot_npy_histogram(npy_path)
 
 # npy_path = r'E:\dataset\temp_npy\112HM10395\CBCTpriorAVG'
 # plot_npy_histogram(npy_path)
