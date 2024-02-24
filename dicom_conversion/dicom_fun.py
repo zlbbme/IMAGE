@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 import pydicom
 from dicom_conversion import *
 
-# npy_data = np.load(r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\npy\Old_result\Phase3\Processed15.npy')
-# # print(npy_data.min(),npy_data.max())
-# # # 使用matplotlib进行可视化
-# plt.imshow(npy_data,'gray')
-# plt.show()
+npy_data = np.load(r'E:\dataset\temp_npy\Fraction1\CBCTp3\15.npy')
+print(npy_data.shape,npy_data.min(),npy_data.max())
+
+# # 使用matplotlib进行可视化
+plt.imshow(npy_data,'gray')
+plt.show()
 
 # dicom_path = r'E:\dataset\Clinic_data\2021121308\CBCTAVG'
 
@@ -99,7 +100,7 @@ def plot_mha_histogram(mha_path):
     plt.show()
 
 # 使用你的DICOM文件路径
-# dicom_path = r'E:\dataset\Clinic_data\2023021508\CBCTp5'
+# dicom_path = r'E:\dataset\temp_dicom\Fraction1\CBCTp4'
 # plot_dicom_histogram(dicom_path)
 # # CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
 # # print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
@@ -108,8 +109,8 @@ def plot_mha_histogram(mha_path):
 # plot_png_histogram(png_path)
 
 # 使用你的NPY文件路径
-npy_path = r'E:\dataset\temp_npy\Fraction2\CBCTp2'
-plot_npy_histogram(npy_path)
+# npy_path = r'E:\dataset\temp_npy\Fraction2\CBCTp2'
+# plot_npy_histogram(npy_path)
 
 # npy_path = r'E:\dataset\temp_npy\112HM10395\CBCTpriorAVG'
 # plot_npy_histogram(npy_path)

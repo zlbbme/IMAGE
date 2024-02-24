@@ -5,6 +5,7 @@ import numpy as np
 import pydicom
 import numpy as np
 import pydicom
+from scipy.ndimage import zoom
 
 #定义函数，使用SimpleITK将dicom序列转换为png文件
 def dicom_series_to_png(dicom_folder, output_folder):
@@ -63,12 +64,17 @@ def convert_dicom_to_png(dicom_folder, output_folder):
             pixel_array = pixel_array - min_CT_num     #将像素值的范围调整到 [0, 最大值] 
             pixel_array[pixel_array >(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num  #截断到[0,1500]
             pixel_array = pixel_array / (max_CT_num-min_CT_num) * 255          #归一到2500
+            
             #将数据格式转换为np.uint8
             pixel_array = pixel_array.astype(np.uint8)
  
             # 创建 PIL Image 对象
             image = Image.fromarray(pixel_array)
 
+            #如果尺寸不足512*512，则以邻域插值的方式将图像尺寸调整为512*512
+            if image.size[0] < 512 or image.size[1] < 512:
+                image = image.resize((512, 512), Image.NEAREST)
+        
             # 保存为 PNG 文件
             print(os.path.splitext(file)[0])
             png_filename = str(slice_num-instance_number) + '.png'
@@ -97,11 +103,20 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian  #‘FileMetaDataset’ object has no attribute ‘TransferSyntaxUID’ 错误
             instance_number = ds.InstanceNumber
             pixel_array = ds.pixel_array
+            pixel_array[pixel_array < min_CT_num] = min_CT_num ; pixel_array[pixel_array > max_CT_num] = max_CT_num
             pixel_array = pixel_array - min_CT_num     #将像素值的范围调整到 [0, 最大值] 
             pixel_array[pixel_array >(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num  #截断到[0,1500]
             pixel_array = pixel_array / (max_CT_num-min_CT_num) * 2500          #归一到2500
             #将数据格式转换为numpy
             pixel_array = pixel_array.astype(np.int16)
+            #如尺寸不足512*512，则以邻域插值的方式将图像尺寸调整为512*512
+            if pixel_array.shape[0] < 512 or pixel_array.shape[1] < 512:
+                # 计算新的尺寸比例
+                ratio = 512 / min(pixel_array.shape[0], pixel_array.shape[1])
+
+                # 调整图像的尺寸到 512x512，并使用bilinear插值
+                pixel_array = zoom(pixel_array, ratio, order=3)
+                pixel_array[pixel_array < 0] = 0 ; pixel_array[pixel_array > 2500] = 2500
             #保存为npy文件
             print(os.path.splitext(file)[0])
             np_filename = str(slice_num-instance_number) + '.npy'

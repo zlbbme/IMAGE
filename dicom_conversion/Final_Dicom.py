@@ -171,7 +171,7 @@ if __name__ == '__main__':
     for patient in os.listdir(Clinic_path):
         patient_path = os.path.join(Clinic_path,patient)
         
-        Clinic_png(patient_path)
+        #Clinic_png(patient_path)
         
         Clinic_npy(patient_path)
         #完成进度条
