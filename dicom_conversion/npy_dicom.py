@@ -3,26 +3,34 @@ import os
 import pydicom
 import nibabel as nib
 import re
-
-#dicom路径
-dicom_file = r'E:\dataset\temp_delete\dcm\0.dcm'
-#npy路径
-npy_file = dicom_file.replace('dcm','npy')
+from scipy.ndimage import zoom
 
 #将读取的npy数组赋值给dicom文件
 def npy2dicom(dicom_file, npy_file):
-    #读取dicom文件
-    ds = pydicom.dcmread(dicom_file, force=True)  
-    npy = np.load(npy_file).astype(np.uint16)
-    #将npy数组赋值给dicom文件
-    ds.PixelData = npy.tobytes()
     dicom_new_file = dicom_file.replace('temp_delete','temp_new')
     if not os.path.exists(os.path.split(dicom_new_file)[0]):
         os.makedirs(os.path.split(dicom_new_file)[0])
-    #保存dicom文件
-    ds.save_as(dicom_new_file)
 
-#write_dicom(dicom_file, npy_file)
+    #读取dicom文件
+    ds = pydicom.dcmread(dicom_file, force=True)  
+    npy = np.load(npy_file).astype(np.uint16)
+    
+    
+    print(ds.Rows,ds.Columns,npy.shape)
+    if ds.Rows == npy.shape[0] and ds.Columns == npy.shape[1]:
+        #将npy数组赋值给dicom文件
+        ds.PixelData = npy.tobytes()
+        ds.save_as(dicom_new_file)
+        
+    else:
+        zoom_factor = min(ds.Rows/npy.shape[0],npy.shape[0]/ds.Rows)  #缩放因子<1
+        resize_npy = zoom(npy, zoom_factor)
+        ds.PixelData = resize_npy.tobytes()
+        ds.save_as(dicom_new_file)
+    #保存dicom文件
+    #ds.save_as(dicom_new_file)
+    print('npy to dicom is done!\n %s has write'%(dicom_new_file))
+
 
 def batch_npy2dicom(dicom_path):
     for files in os.listdir(dicom_path):

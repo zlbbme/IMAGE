@@ -17,10 +17,11 @@ def rename_dicom_files(directory):
             os.rename(filepath, new_filepath)
 
 # Usage example
+patient_path = r"E:\dataset\test_clinic\Fraction3"
 for i in range (10):
-    directory = r"E:\dataset\test_clinic\Fraction3\CBCTp"+str(i)
-    rename_dicom_files(directory)
+    Phase_directory = patient_path+"\CBCTp"+str(i)
+    rename_dicom_files(Phase_directory)
 
-prior_directory = r"E:\dataset\test_clinic\Fraction3\CBCTpriorAVG"
+prior_directory = patient_path+"\CBCTpriorAVG"
 rename_dicom_files(prior_directory)
 

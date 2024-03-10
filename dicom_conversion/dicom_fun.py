@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import pydicom
 from dicom_conversion import *
 
-npy_data = np.load(r'E:\dataset\temp_npy\Fraction1\CBCTp3\15.npy')
-print(npy_data.shape,npy_data.min(),npy_data.max())
+npy_data = np.load(r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\PRIOR_test\0310_result\Phase1\040.npy')
+#print(npy_data.shape,npy_data.min(),npy_data.max())
 
 # # 使用matplotlib进行可视化
 plt.imshow(npy_data,'gray')
@@ -100,7 +100,7 @@ def plot_mha_histogram(mha_path):
     plt.show()
 
 # 使用你的DICOM文件路径
-# dicom_path = r'E:\dataset\temp_dicom\Fraction1\CBCTp4'
+# dicom_path = r'E:\dataset\Clinic_data\2023021508\CTp0'
 # plot_dicom_histogram(dicom_path)
 # # CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
 # # print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
