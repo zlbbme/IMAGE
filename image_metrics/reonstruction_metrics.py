@@ -33,8 +33,8 @@ def compare(recon0, recon1, verbose=True):
 
 
 if __name__ == '__main__':
-    recon0_path = r'/Data/SaveBibMip-SX/eva_data/PRIOR_test/Sparse/phase_1/sparse_040.npy'
-    recon1_path = r'/Data/SaveBibMip-SX/eva_data/PRIOR_test/Label/phase_1/label_040.npy'
+    recon0_path = r'E:\dataset\temp_npy\2021121308\CTp6\10.npy'
+    recon1_path = r'E:\dataset\temp_npy\2021121308\CBCTp6\10.npy'
     recon0 = np.load(recon0_path)
     print(recon0.max(),recon0.min())
     recon1 = np.load(recon1_path)

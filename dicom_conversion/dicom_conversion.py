@@ -7,37 +7,6 @@ import numpy as np
 import pydicom
 from scipy.ndimage import zoom
 
-#定义函数，使用SimpleITK将dicom序列转换为png文件
-def dicom_series_to_png(dicom_folder, output_folder):
-    #判断输出文件夹是否存在，不存在则创建
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    #读取dicom序列
-    dicom_names = sitk.ImageSeriesReader.GetGDCMSeriesFileNames(dicom_folder)
-    reader = sitk.ImageSeriesReader()
-    reader.SetFileNames(dicom_names)
-    dicom_series = reader.Execute()
-    #获取dicom序列的像素值
-    dicom_array = sitk.GetArrayFromImage(dicom_series)
-    #获取dicom序列的维度
-    dicom_array_shape = dicom_array.shape
-    print(dicom_array_shape)
-    #获取图像的最大值和最小值
-    max_CT_num = np.max(dicom_array); min_CT_num = np.min(dicom_array)
-    #遍历dicom序列的每一张图像
-    for i in range(dicom_array_shape[0]):
-        
-        #创建PIL Image对象
-        image = Image.fromarray(dicom_array[i])
-        #归一化图像
-        image = (image-min_CT_num) / (max_CT_num - min_CT_num) * 255
-        #转换图像数据类型
-        image = Image.fromarray(image.astype('uint8'))
-        #保存为png文件
-        png_filename = str(i) + '.png'
-        png_filepath = os.path.join(output_folder, png_filename)
-        image.save(png_filepath)
-
 def convert_dicom_to_png(dicom_folder, output_folder):
     #判断输出文件夹是否存在，不存在则创建
     if not os.path.exists(output_folder):
