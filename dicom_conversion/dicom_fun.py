@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pydicom
 from dicom_conversion import *
 
-npy_data = np.load(r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\PRIOR_test\0310_result\Phase1\040.npy')
+npy_data = np.load(r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\PRIOR_test\Sparse\phase_1\sparse_024.npy')
 #print(npy_data.shape,npy_data.min(),npy_data.max())
 
 # # 使用matplotlib进行可视化
