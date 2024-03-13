@@ -1,9 +1,10 @@
+"通过4D-CT模拟4D-CBCT的噪声"
+
 import odl
 import numpy as np
 import pydicom
 import os
 from odl.contrib import tomo
-
 import matplotlib.pyplot as plt
 #导入峰值信噪比模块
 from skimage.metrics import peak_signal_noise_ratio as PSNR
@@ -33,12 +34,31 @@ def read_gate(path_gate):
                 gate_data = image_data
             else:
                 gate_data = np.concatenate((gate_data,image_data),axis=2)
-
-                #print(image_data.shape)
-            
+         
     return gate_data
 
+def elekta_FDK(dcm_path, num_angles=60):
+    # 读取DICOM文件并获取图像数据
+    input_volumn = read_dicom(dcm_path)
+    # 定义重建空间和投影几何
+    space = tomo.elekta_xvi_space(shape= input_volumn.shape)
+    detector_geometry = tomo.elekta_xvi_geometry(angles = np.linspace(0, 2 * np.pi, num_angles, endpoint=False),#num_angles=600,
+                                                piercing_point=(512.0, 512.0),detector_shape=(1024, 1024))
+    # Create ray transform
+    ray_transform = odl.tomo.RayTransform(space, detector_geometry, use_cache=False)
+    # Create artificial data
+    projections = ray_transform(input_volumn)     # (60, 1024, 1024), 60 projections ,float32
 
+    # Get default FDK reconstruction operator
+    recon_op = tomo.elekta_xvi_fbp(ray_transform)
+
+    recons_volumn = recon_op(projections).astype(np.int16)
+    #转换成numpy数组
+    recons_volumn = recons_volumn.asarray()
+    recons_volumn[recons_volumn <0] = 0 
+
+    return recons_volumn
+    
 if __name__ == '__main__':
     patient_file = r'E:\dataset\Clinic_data\2022090604'
     gate_path = patient_file + '\CTp0'
@@ -64,8 +84,6 @@ if __name__ == '__main__':
     #转换成numpy数组
     reconstruction = reconstruction.asarray()
     reconstruction[reconstruction <0] = 0 
-    #归一到0-最大值
-    #reconstruction = (reconstruction - reconstruction.min())/(reconstruction.max() - reconstruction.min())*4000
 
     print(reconstruction.shape)  # (512, 512, 60) int16
     #打印最大值
