@@ -36,6 +36,7 @@ def read_4D_image(input_patient_path):
     filelist = os.listdir(input_patient_path)
     #剔除掉文件夹名不包含数字的文件夹，只添加10个时相的图像
     filelist = [file for file in filelist if re.findall(r"\d+", file)] 
+    
     #print(filelist)
     phase_num = 0
     for j ,phase in enumerate(filelist):
@@ -48,7 +49,7 @@ def read_4D_image(input_patient_path):
             image_4D = np.concatenate((image_4D, img_phase), axis=0) if j!=0 else img_phase
             phase_num += 1
             print('phase%d has been read'%(j+1))
-
+    
     #确定image_4D的第一维度是phase_num，不是的话报错
     assert image_4D.shape[0] == phase_num
         
@@ -69,7 +70,7 @@ def consturct_4D_image(input_patient_path,intensity='AVG'):
     print('4D image has been constructed')
     return consturcted_image
 
-def creat_prior_imag(input_patient_path,intensity='AVG',output_type='png'):
+def creat_prior_image(input_patient_path,intensity='AVG',output_type='png'):
     #构建4D图像
     consturcted_image = consturct_4D_image(input_patient_path,intensity)
     output_prior_path = input_patient_path+'/CBCTprior'+intensity
@@ -95,9 +96,9 @@ def batch_construct_4D_image(input_path,output_type):
     for patient in patient_list:
 
         input_patient_path = os.path.join(input_path, patient)
-        creat_prior_imag(input_patient_path,intensity='AVG',output_type=output_type)
-        creat_prior_imag(input_patient_path,intensity='MIP',output_type=output_type)
+        creat_prior_image(input_patient_path,intensity='AVG',output_type=output_type)
+        creat_prior_image(input_patient_path,intensity='MIP',output_type=output_type)
 
 if __name__ == '__main__':
-    input_path = r'E:\dataset\temp_png'
-    batch_construct_4D_image(input_path,output_type='png')
+    input_patient_path = r'E:\dataset\temp_npy\sim_2021121308'
+    creat_prior_image(input_patient_path,intensity = 'AVG',output_type = 'npy')

@@ -59,6 +59,7 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
         min_CT_num = 0;max_CT_num = 1200
     else:
         min_CT_num = 0;max_CT_num = 1800   #Clinical CT的CT值范围为0-1500
+    norm_CT_num = 1800
     #遍历dicom文件夹下的所有文件，如果是dicom文件则转换为png文件
     for root, dirs, files in os.walk(dicom_folder):
         slice_num = len(files)
@@ -75,7 +76,7 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
             pixel_array[pixel_array < min_CT_num] = min_CT_num ; pixel_array[pixel_array > max_CT_num] = max_CT_num
             pixel_array = pixel_array - min_CT_num     #将像素值的范围调整到 [0, 最大值] 
             pixel_array[pixel_array >(max_CT_num-min_CT_num)] = max_CT_num-min_CT_num  #截断到[0,1500]
-            pixel_array = pixel_array / (max_CT_num-min_CT_num) * 2500          #归一到2500
+            pixel_array = pixel_array / (max_CT_num-min_CT_num) * norm_CT_num          #归一到2500
             #将数据格式转换为numpy
             pixel_array = pixel_array.astype(np.int16)
             #如尺寸不足512*512，则以邻域插值的方式将图像尺寸调整为512*512
@@ -85,7 +86,7 @@ def convert_dicom_to_npy(dicom_folder, output_folder):
 
                 # 调整图像的尺寸到 512x512，并使用bilinear插值
                 pixel_array = zoom(pixel_array, ratio, order=3)
-                pixel_array[pixel_array < 0] = 0 ; pixel_array[pixel_array > 2500] = 2500
+                pixel_array[pixel_array < 0] = 0 ; pixel_array[pixel_array > norm_CT_num] = norm_CT_num
             #保存为npy文件
             print(os.path.splitext(file)[0])
             np_filename = str(slice_num-instance_number) + '.npy'
@@ -206,25 +207,27 @@ def normalize_dicom_intensity(dicom_path, min_val, max_val):
 
 if __name__ == "__main__":
     # Usage example
-    dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1'
-    # output_folder = 'npy'    
-    #convert_dicom_to_png(dicom_folder, output_folder)
-    #convert_dicom_to_npy(dicom_folder, output_folder)
-    #dicom_series_to_nrrd(dicom_folder, output_folder)
-    #读取npy文件并显示
-    # data = np.load('./npy/45.npy')
-    # #可视化显示
-    # plt.imshow(data, cmap='gray')
-    # plt.show()
-    # output_mha  = r'E:\dataset\temp_dicom\100HM10395\CBCTAVG\mha'
-    # convert_dicom_to_mha(dicom_folder, output_mha)
-    #convert_dicom_to_nii(dicom_folder, output_folder)
-    # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
-    # print(max_CT_num, min_CT_num)
-    # normalize_dicom_intensity(dicom_folder, 0, 4000)
-    # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
-    # print(max_CT_num, min_CT_num)
-    output_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_dcm_png'
-    #convert_dicom_to_png(dicom_folder, output_folder)
-    npy_folder = r'E:\dataset\temp_npy\101HM10395' ;output_folder = r'E:\dataset\temp_dicom'
-    
+    # dicom_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1'
+    # # output_folder = 'npy'    
+    # #convert_dicom_to_png(dicom_folder, output_folder)
+    # #convert_dicom_to_npy(dicom_folder, output_folder)
+    # #dicom_series_to_nrrd(dicom_folder, output_folder)
+    # #读取npy文件并显示
+    # # data = np.load('./npy/45.npy')
+    # # #可视化显示
+    # # plt.imshow(data, cmap='gray')
+    # # plt.show()
+    # # output_mha  = r'E:\dataset\temp_dicom\100HM10395\CBCTAVG\mha'
+    # # convert_dicom_to_mha(dicom_folder, output_mha)
+    # #convert_dicom_to_nii(dicom_folder, output_folder)
+    # # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
+    # # print(max_CT_num, min_CT_num)
+    # # normalize_dicom_intensity(dicom_folder, 0, 4000)
+    # # min_CT_num, max_CT_num, len_dicom =dicom_read_max_min(dicom_folder)
+    # # print(max_CT_num, min_CT_num)
+    # output_folder = r'E:\dataset\temp_dicom\100HM10395\CBCTp1_dcm_png'
+    # #convert_dicom_to_png(dicom_folder, output_folder)
+    # npy_folder = r'E:\dataset\temp_npy\101HM10395' ;output_folder = r'E:\dataset\temp_dicom'
+    input_folder = r'E:\dataset\Clinic_data\2021121308\CTp9'
+    output_folder = r'E:\dataset\temp_npy\sim_2021121308\CTp9'
+    convert_dicom_to_npy(input_folder, output_folder)

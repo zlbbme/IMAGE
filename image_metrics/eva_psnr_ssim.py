@@ -36,15 +36,15 @@ def compare(recon0, recon1, verbose=True):
 
 if __name__ == '__main__':
 
-    recon0 = np.load(r'E:\dataset\temp_npy\test_2022090604\CBCTp3\25.npy')
-    recon1 = np.load(r'E:\dataset\temp_npy\test_2022090604\CTp3\25.npy')
+    recon0 = np.load(r'E:\dataset\temp_npy\sim_2021121308\CBCTp1\25.npy')
+    recon1 = np.load(r'E:\dataset\temp_npy\sim_2021121308\CTp1\25.npy')
     mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
     print('npy',mse_recon, ssim_recon, psnr_recon)
-    cbct_image = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\png\2024_result\Phase2\Processed10.png'
-    ct_image =  r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\png\GT\GT_Phase2\GT10.png'
-    #读取CBCT图像
-    cbct_image = cv2.imread(cbct_image)
-    #读取CT图像
-    ct_image = cv2.imread(ct_image)
-    mse_recon, ssim_recon, psnr_recon = compare( cbct_image,ct_image)
-    print('png',mse_recon, ssim_recon, psnr_recon)
+    # cbct_image = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\png\2024_result\Phase2\Processed10.png'
+    # ct_image =  r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\png\GT\GT_Phase2\GT10.png'
+    # #读取CBCT图像
+    # cbct_image = cv2.imread(cbct_image)
+    # #读取CT图像
+    # ct_image = cv2.imread(ct_image)
+    # mse_recon, ssim_recon, psnr_recon = compare( cbct_image,ct_image)
+    # print('png',mse_recon, ssim_recon, psnr_recon)
