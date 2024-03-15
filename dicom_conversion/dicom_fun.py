@@ -6,8 +6,8 @@ from dicom_conversion import *
 
 import os
 import SimpleITK as sitk
-npy_data = np.load(r'E:\dataset\temp_npy\sim_2021121308\CTp0\24.npy')
-#print(npy_data.shape,npy_data.min(),npy_data.max())
+npy_data = np.load(r'E:\dataset\temp_npy\Fraction1\CBCTp0\24.npy')
+print(npy_data.shape,npy_data.min(),npy_data.max())
 
 # # 使用matplotlib进行可视化
 plt.imshow(npy_data,'gray')
