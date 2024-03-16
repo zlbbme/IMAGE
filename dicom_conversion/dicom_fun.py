@@ -6,7 +6,7 @@ from dicom_conversion import *
 
 import os
 import SimpleITK as sitk
-npy_data = np.load(r'E:\dataset\temp_npy\Fraction1\CBCTp0\24.npy')
+npy_data = np.load(r'E:\dataset\temp_delete\Fraction3\CBCTpriorAVG\18.npy')
 print(npy_data.shape,npy_data.min(),npy_data.max())
 
 # # 使用matplotlib进行可视化
@@ -102,7 +102,7 @@ def plot_mha_histogram(mha_path):
     plt.show()
 
 # 使用你的DICOM文件路径
-# dicom_path = r'E:\dataset\Clinic_data\2023021508\CTp0'
+# dicom_path = r'E:\dataset\temp_dicom\Fraction1\CTp0'
 # plot_dicom_histogram(dicom_path)
 # # CT_min_num,CT_max_num,len_num = dicom_read_max_min(dicom_path)
 # # print('CT_min_num:',CT_min_num,'CT_max_num:',CT_max_num,'len_num:',len_num)
@@ -111,11 +111,11 @@ def plot_mha_histogram(mha_path):
 # plot_png_histogram(png_path)
 
 # 使用你的NPY文件路径
-# npy_path = r'E:\dataset\temp_npy\sim_2021121308\CBCTp0'
-# plot_npy_histogram(npy_path)
-
-npy_path = r'E:\dataset\temp_npy\sim_2021121308\CTp0'
+npy_path = r'E:\dataset\temp_delete\npy\CBCTp0'
 plot_npy_histogram(npy_path)
+
+# npy_path = r'E:\dataset\temp_delete\Fraction1\my_result\Phase0'
+# plot_npy_histogram(npy_path)
 #使用mha文件路径
 # mha_path = r'E:\dataset\temp_dicom\100HM10395\CBCTp1.mha'
 # plot_mha_histogram(mha_path)
