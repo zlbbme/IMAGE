@@ -33,18 +33,40 @@ def compare(recon0, recon1, verbose=True):
     return (mse_recon, ssim_recon, psnr_recon)
 
 
+if __name__ == '__main__': 
+    # recon0_path = r'/Data/SaveBibMip-SX/eva_data/XCAT/npy/Degraded/Phase1/Degraded10.npy'
+    # recon1_path = r'/Data/SaveBibMip-SX/eva_data/XCAT/npy/GT/GT_Phase1/GT10.npy'
+    # recon0 = np.load(recon0_path)
+    # print(recon0.max(),recon0.min())
+    # recon1 = np.load(recon1_path)
+    # print(recon1.max(),recon1.min())
+    # mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
+    # print(recon0_path,mse_recon, ssim_recon, psnr_recon)
 
-if __name__ == '__main__':
-
-    recon0 = np.load(r'E:\dataset\temp_npy\sim_2021121308\CBCTp1\25.npy')
-    recon1 = np.load(r'E:\dataset\temp_npy\sim_2021121308\CTp1\25.npy')
-    mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
-    print('npy',mse_recon, ssim_recon, psnr_recon)
-    # cbct_image = r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\png\2024_result\Phase2\Processed10.png'
-    # ct_image =  r'\\192.168.202.30\FtpWorkDir\SaveBibMip-SX\eva_data\XCAT\png\GT\GT_Phase2\GT10.png'
-    # #读取CBCT图像
-    # cbct_image = cv2.imread(cbct_image)
-    # #读取CT图像
-    # ct_image = cv2.imread(ct_image)
-    # mse_recon, ssim_recon, psnr_recon = compare( cbct_image,ct_image)
-    # print('png',mse_recon, ssim_recon, psnr_recon)
+    slice_num = 74
+    phase_mse = [] ;phase_ssim = [] ;phase_psnr = []
+    all_mse = []   ;all_ssim = []   ;all_psnr = []
+    for i in range (10):
+        for j in range(0,slice_num):
+            recon0_path = r'/Data/SaveBibMip-SX/eva_data/test_clinic/CBCTp%d/%d.npy' %(i,j+1)
+            recon1_path = r'/Data/SaveBibMip-SX/eva_data/test_clinic/CTp%d/%d.npy'   %(i,j)
+            recon0 = np.load(recon0_path)
+            print(recon0.max(),recon0.min())
+            recon1 = np.load(recon1_path)
+            #print(recon1.max(),recon1.min())
+            mse_recon, ssim_recon, psnr_recon = compare(recon0, recon1) 
+            #print(recon0_path,mse_recon, ssim_recon, psnr_recon)
+            phase_mse.append(mse_recon)
+            phase_psnr.append(psnr_recon)
+            phase_ssim.append(ssim_recon)
+        all_mse.append(np.mean(phase_mse))
+        all_psnr.append(np.mean(phase_psnr))
+        all_ssim.append(np.mean(phase_ssim))
+        print('phase%d_mse_mean:%.4f'%(i,np.mean(phase_mse)))
+        print('phase%d_psnr_mean:%.4f'%(i,np.mean(phase_psnr)))
+        print('phase%d_ssim_mean:%.4f'%(i,np.mean(phase_ssim)))
+    print(recon0_path)
+    print('all_mse_mean:%.4f'%(np.mean(phase_mse)))
+    print('all_psnr_mean:%.4f'%(np.mean(phase_psnr)))
+    print('all_ssim_mean:%.4f'%(np.mean(phase_ssim)))
+        
