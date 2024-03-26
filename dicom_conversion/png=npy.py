@@ -33,15 +33,15 @@ def batch_png2npy(input_path):
 def convert_npy_to_png(npy_path):
     #读取npy文件
     npy_file = np.load(npy_path)
-    print(npy_file.min(),npy_file.max())
+    #print(npy_file.min(),npy_file.max())
     npy_file[npy_file<30] = 0 ; npy_file[npy_file>npy_file.max()*0.8] = npy_file.max()*0.8
-    print(npy_file.min(),npy_file.max())
+    #print(npy_file.min(),npy_file.max())
     npy_file = (npy_file -npy_file.min()) / (npy_file.max()-npy_file.min()) * 255
     #将numpy数组转换为图像
     image = Image.fromarray(npy_file.astype(np.uint8))
 
     #保存图像
-    #image.save(npy_path.replace('npy', 'png'))
+    image.save(npy_path.replace('npy', 'png'))
 
 
 def batch_npy2png(input_path):
@@ -60,5 +60,5 @@ def batch_npy2png(input_path):
 
 if __name__ == '__main__':
     print('This function can convert npy=png')
-    input_path = r'E:\dataset\sim_2021121308\CycNnet_result\Phase0'
+    input_path = r'E:\dataset\result_show\sim_result\Phase0'
     batch_npy2png(input_path)
